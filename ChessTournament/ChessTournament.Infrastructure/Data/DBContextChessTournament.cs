@@ -10,7 +10,8 @@ public class DbContextChessTournament : DbContext
 
     #region Entities
     public DbSet<Member> Members { get; set; }
-    
+    public DbSet<Tournament> Tournaments { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     #endregion
 
@@ -18,5 +19,7 @@ public class DbContextChessTournament : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new MemberConfig());
+        modelBuilder.ApplyConfiguration(new TournamentConfig());
+        modelBuilder.ApplyConfiguration(new CategoryConfig());
     }
 }

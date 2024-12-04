@@ -3,6 +3,7 @@ using ChessTournament.API.Mappers;
 using ChessTournament.API.Services;
 using ChessTournament.Applications.Interfaces.Service;
 using ChessTournament.Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChessTournament.API.Controllers;
