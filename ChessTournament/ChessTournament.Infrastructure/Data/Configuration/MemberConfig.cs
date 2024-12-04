@@ -37,7 +37,8 @@ public class MemberConfig : IEntityTypeConfiguration<Member>
                .IsUnique();
         builder.HasIndex(m => m.Mail)
                .IsUnique();
-
+        
+        builder.ToTable(m => m.HasCheckConstraint("CK_ELO", "ELO BETWEEN 0 AND 3000"));
 
     }
 }

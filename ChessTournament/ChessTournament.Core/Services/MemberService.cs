@@ -1,81 +1,91 @@
-﻿using System.Data;
-using ChessTournament.Applications.Interfaces.Repository;
+﻿using ChessTournament.Applications.Interfaces.Repository;
 using ChessTournament.Applications.Interfaces.Service;
 using ChessTournament.Domain.Models;
-using Isopoh.Cryptography.Argon2;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace ChessTournament.Applications.Services;
 
-public class MemberService :IMemberService
+public class MemberService : IMemberService
 {
     private readonly IMemberRepository _memberRepository;
     private readonly IPasswordService _passwordService;
 
     public MemberService(IMemberRepository memberRepository, IPasswordService passwordService)
     {
-        this._memberRepository = memberRepository;
-        this._passwordService = passwordService;
+        _memberRepository = memberRepository;
+        _passwordService = passwordService;
     }
 
-    public List<Member> GetAll()
+    public async Task<List<Member>> GetAllAsync()
     {
         try
         {
-            return this._memberRepository.GetAll();
+            return await _memberRepository.GetAllAsync();
         }
         catch (Exception e)
         {
-            throw new Exception("Member service error" + e.Message);
+            throw new Exception("Member service error: " + e.Message);
         }
     }
 
-    public Member? GetOneById(int key)
+    public async Task<Member?> GetOneByIdAsync(int key)
     {
         try
         {
-            return this._memberRepository?.GetOneById(key);
+            return await _memberRepository.GetOneByIdAsync(key);
         }
         catch (Exception e)
         {
-            throw new Exception("Member service error" + e.Message);
+            throw new Exception("Member service error: " + e.Message);
         }
     }
 
-    public Member Create(Member entity)
+    public async Task<Member> CreateAsync(Member entity)
     {
         try
         {
-            this.CheckUnique(entity);
+            await CheckUniqueAsync(entity);
 
-            string salt = _passwordService.GenerateSalt();
-            
-            entity.Password = _passwordService.HashPassword(entity.Password);
-            
-            return this._memberRepository.Create(entity);
+            entity.Password = _passwordService.HashPassword(entity.Password, entity.Mail);
+
+            return await _memberRepository.CreateAsync(entity);
         }
         catch (Exception e)
         {
-            throw new Exception("Member service error" + e.Message);
+            throw new Exception("Member service error: " + e.Message);
         }
     }
 
-
-    public Member Update(Member entity)
+    public async Task<Member> UpdateAsync(Member entity)
     {
-        throw new NotImplementedException();
+        try
+        {
+            return await _memberRepository.UpdateAsync(entity);
+        }
+        catch (Exception e)
+        {
+            throw new Exception("Member service error: " + e.Message);
+        }
     }
 
-    public bool Delete(Member entity)
+    public async Task<bool> DeleteAsync(Member entity)
     {
-        throw new NotImplementedException();
+        try
+        {
+            return await _memberRepository.DeleteAsync(entity);
+        }
+        catch (Exception e)
+        {
+            throw new Exception("Member service error: " + e.Message);
+        }
     }
 
-    private void CheckUnique(Member entity)
+    private async Task CheckUniqueAsync(Member entity)
     {
-        Member? member = this.GetOneById(entity.Id);
+        Member? member = await GetOneByIdAsync(entity.Id);
 
-        if (member is not null && (member.Mail == entity.Mail || member.Username == entity.Username))
+        if (member != null && (member.Mail == entity.Mail || member.Username == entity.Username))
             throw new Exception("Member already exists");
     }
-    
 }

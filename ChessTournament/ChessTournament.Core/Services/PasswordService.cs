@@ -6,25 +6,24 @@ namespace ChessTournament.Applications.Services;
 
 public class PasswordService : IPasswordService
 {
-    public string GenerateSalt()
+    public string GenerateSalt(string email)
     {
-        byte[] saltBytes = new byte[128];
-        using (var rng = new RNGCryptoServiceProvider())
-        {
-            rng.GetBytes(saltBytes);
-        }
-        return Convert.ToBase64String(saltBytes);
+        if (string.IsNullOrEmpty(email) || email.Length < 6)
+            throw new ArgumentException("Email must have at least 6 characters.", nameof(email));
+        
+        return email.Substring(0, 6); 
     }
 
-    public string HashPassword(string password)
+    public string HashPassword(string password, string mail)
     {
-        string saltedPassword = GenerateSalt() + password;
+        string saltedPassword = GenerateSalt(mail) + password;
         return Argon2.Hash(saltedPassword); 
     }
 
-    public bool VerifyPassword(string enteredPassword, string storedHash, string storedSalt)
+    public bool VerifyPassword(string enteredPassword, string storedHash, string email)
     {
-        string saltedPassword = storedSalt + enteredPassword;
+        string salt = GenerateSalt(email);
+        string saltedPassword = salt + enteredPassword;
         string hashedPassword = Argon2.Hash(saltedPassword);
         return hashedPassword == storedHash;
     }

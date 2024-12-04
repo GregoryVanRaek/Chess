@@ -2,7 +2,7 @@
 
 public interface IPasswordService
 {
-    string GenerateSalt();
-    string HashPassword(string password);
+    string GenerateSalt(string mail);
+    string HashPassword(string password, string mail);
     bool VerifyPassword(string enteredPassword, string storedHash, string storedSalt);
 }
