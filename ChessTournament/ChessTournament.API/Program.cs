@@ -1,3 +1,4 @@
+using ChessTournament.API.Services;
 using ChessTournament.Applications.Interfaces.Repository;
 using ChessTournament.Applications.Interfaces.Service;
 using ChessTournament.Applications.Services;
@@ -23,6 +24,8 @@ builder.Services.AddDbContext<DbContextChessTournament>(
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IMemberService, MemberService>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
+
+builder.Services.AddScoped<MailService>();
 
 var app = builder.Build();
 

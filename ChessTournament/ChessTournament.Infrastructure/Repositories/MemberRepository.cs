@@ -38,6 +38,18 @@ public class MemberRepository : IMemberRepository
         }
     }
 
+    public async Task<Member?> GetOneByEmailOrUsernameAsync(string mail, string username)
+    {
+        try
+        {
+            return await _context.Members.FirstOrDefaultAsync(m => m.Username == username || m.Mail == mail);
+        }
+        catch (Exception e)
+        {
+            throw new Exception("Error during get by email or username request in database: " + e.Message);
+        }
+    }
+
     public async Task<Member> CreateAsync(Member entity)
     {
         try
@@ -76,7 +88,7 @@ public class MemberRepository : IMemberRepository
     {
         try
         {
-            Member? toDelete = await GetOneByIdAsync(entity.Id);
+            Member? toDelete = await GetOneByIdAsync((int)entity.Id);
 
             if (toDelete != null)
             {

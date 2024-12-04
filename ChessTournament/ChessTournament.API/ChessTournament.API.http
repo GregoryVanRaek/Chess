@@ -1,6 +1,0 @@
-@ChessTournament.API_HostAddress = http://localhost:5153
-
-GET {{ChessTournament.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

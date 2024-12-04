@@ -12,7 +12,6 @@ public class MemberConfig : IEntityTypeConfiguration<Member>
 
         // fieds
         builder.Property(m => m.Id)
-               .IsRequired()
                .ValueGeneratedOnAdd();
         
         builder.Property(m => m.Username)
@@ -24,11 +23,13 @@ public class MemberConfig : IEntityTypeConfiguration<Member>
         builder.Property(m => m.Birthday)
                .IsRequired();
         builder.Property(m => m.Gender)
-               .IsRequired();
+               .IsRequired()
+               .HasConversion<string>();
         builder.Property(m => m.Elo)
                .IsRequired();
         builder.Property(m => m.Role)
-               .IsRequired();
+               .IsRequired()
+               .HasConversion<string>();
         
         // constraint
         builder.HasKey(m => m.Id);

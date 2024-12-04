@@ -3,6 +3,7 @@ using ChessTournament.Applications.Interfaces.Service;
 using ChessTournament.Domain.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using ChessTournament.Domain.Exception;
 
 namespace ChessTournament.Applications.Services;
 
@@ -51,6 +52,10 @@ public class MemberService : IMemberService
 
             return await _memberRepository.CreateAsync(entity);
         }
+        catch (AlreadyExistException e)
+        {
+            throw;
+        }
         catch (Exception e)
         {
             throw new Exception("Member service error: " + e.Message);
@@ -65,7 +70,7 @@ public class MemberService : IMemberService
         }
         catch (Exception e)
         {
-            throw new Exception("Member service error: " + e.Message);
+            throw new Exception("Member service error: ");
         }
     }
 
@@ -83,9 +88,9 @@ public class MemberService : IMemberService
 
     private async Task CheckUniqueAsync(Member entity)
     {
-        Member? member = await GetOneByIdAsync(entity.Id);
+        Member? member = await _memberRepository.GetOneByEmailOrUsernameAsync(entity.Mail, entity.Username);
 
         if (member != null && (member.Mail == entity.Mail || member.Username == entity.Username))
-            throw new Exception("Member already exists");
+            throw new AlreadyExistException("Member already exists");
     }
 }
