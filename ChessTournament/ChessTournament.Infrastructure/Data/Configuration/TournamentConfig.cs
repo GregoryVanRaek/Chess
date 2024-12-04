@@ -43,6 +43,5 @@ public class TournamentConfig :IEntityTypeConfiguration<Tournament>
         builder.ToTable(t => t.HasCheckConstraint("CK_PLAYER_MAX", "PLAYERMAX BETWEEN 0 AND 32"));
         builder.ToTable(t => t.HasCheckConstraint("CK_ELO_MIN", "ELOMIN IS NULL OR (ELOMIN BETWEEN 0 AND 3000)"));
         builder.ToTable(t => t.HasCheckConstraint("CK_ELO_MAX", "ELOMAX IS NULL OR (ELOMAX BETWEEN 0 AND 3000)"));
-
     }
 }
