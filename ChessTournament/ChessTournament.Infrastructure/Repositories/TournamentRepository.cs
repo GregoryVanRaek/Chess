@@ -1,4 +1,5 @@
 ﻿using ChessTournament.Applications.Interfaces.Repository;
+using ChessTournament.Domain.Enum;
 using ChessTournament.Domain.Models;
 using ChessTournament.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -48,5 +49,28 @@ public class TournamentRepository :ITournamentRepository
         }
         
         return false;
+    }
+    
+    public async Task<List<Category>> MapCategoriesAsync(List<CategoryEnum> categoryEnums)
+    {
+        var categories = new List<Category>();
+
+        foreach (var categoryEnum in categoryEnums)
+        {
+            var existingCategory = await _context.Categories
+                .FirstOrDefaultAsync(c => c.Name == categoryEnum);
+
+            if (existingCategory != null)
+                categories.Add(existingCategory);
+            else
+                throw new Exception($"Category {categoryEnum} does not exist.");
+        }
+
+        return categories;
+    }
+
+    public Task<Tournament> CreateAsync(Tournament entity, List<CategoryEnum> categoryEnums)
+    {
+        throw new NotImplementedException();
     }
 }

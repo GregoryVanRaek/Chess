@@ -14,10 +14,11 @@ public class CategoryConfig : IEntityTypeConfiguration<Category>
 
         // field
         builder.Property(c => c.Id)
-            .ValueGeneratedOnAdd();
+                .ValueGeneratedOnAdd();
 
         builder.Property(c => c.Name)
-            .IsRequired();
+               .IsRequired()
+               .HasConversion<string>();
 
         // Constraint
         builder.HasKey(c => c.Id);
@@ -26,15 +27,18 @@ public class CategoryConfig : IEntityTypeConfiguration<Category>
         {
             new Category
             {
-                Name = "Junior"
+                Id = 1,
+                Name = CategoryEnum.Junior
             },
             new Category
             {
-                Name = "Veteran"
+                Id = 2,
+                Name = CategoryEnum.Veteran
             },
             new Category
             {
-                Name = "Senior"
+                Id = 3,
+                Name = CategoryEnum.Senior
             }
         });
     }

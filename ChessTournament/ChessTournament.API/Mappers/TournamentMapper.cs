@@ -1,11 +1,12 @@
 ﻿using ChessTournament.API.DTO.Tournament;
+using ChessTournament.Domain.Enum;
 using ChessTournament.Domain.Models;
 
 namespace ChessTournament.API.Mappers;
 
 public static class TournamentMapper
 {
-    public static TournamentViewDTO ToListDTO(this Tournament tournament)
+    public static TournamentViewDTO ToDTO(this Tournament tournament)
     {
         return new TournamentViewDTO()
         {
@@ -23,5 +24,29 @@ public static class TournamentMapper
             CreationDate = tournament.CreationDate,
             UpdateDate = tournament.UpdateDate,
         };
+    }
+    
+    public static Tournament ToTournament(this TournamentFormDTO tournamentFormDTO)
+    {
+        return new Tournament
+        {
+            Name = tournamentFormDTO.Name,
+            Place = tournamentFormDTO.Place,
+            PlayerMin = tournamentFormDTO.PlayerMin,
+            PlayerMax = tournamentFormDTO.PlayerMax,
+            EloMin = tournamentFormDTO.EloMin,
+            EloMax = tournamentFormDTO.EloMax,
+            State = TournamentState.WaitingForPlayer,
+            ActualRound = 0,
+            WomenOnly = tournamentFormDTO.WomenOnly,
+            RegistrationEndDate = tournamentFormDTO.RegistrationEndDate,
+            CreationDate = DateTime.Today,
+            UpdateDate = DateTime.Now,
+        };
+    }
+
+    public static List<CategoryEnum> ToCategoryEnums(this List<CategoryViewDTO> categoryViewDTOs)
+    {
+        return categoryViewDTOs.Select(c => c.Name).ToList();
     }
 }

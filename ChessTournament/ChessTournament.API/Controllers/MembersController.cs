@@ -2,6 +2,7 @@
 using ChessTournament.API.Mappers;
 using ChessTournament.API.Services;
 using ChessTournament.Applications.Interfaces.Service;
+using ChessTournament.Domain.Const;
 using ChessTournament.Domain.Exception;
 using ChessTournament.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -32,16 +33,13 @@ public class MembersController : ControllerBase
     {
         try
         {
-            List<Member> members = new List<Member>();
-            
-            await foreach (Member member in _memberService.GetAllAsync())
-                members.Add(member);
+            IEnumerable<Member> members = _memberService.GetAllAsync().ToBlockingEnumerable();
 
             if (!members.Any())
                 return NotFound("No member found");
 
             IEnumerable<MemberViewDTO> memberDTOs = members.Select(MemberMapper.ToListDTO);
-
+            
             return Ok(memberDTOs);
         }
         catch (DBException e)
@@ -56,45 +54,60 @@ public class MembersController : ControllerBase
 
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<MemberViewDTO>> GetById([FromRoute] int id)
     {
-        Member? member = await this._memberService.GetOneByIdAsync(id);
-
-        if (member is null)
-            return NotFound("This member doesn't exist");
-
-        return Ok(member.ToDTO());
-    }
-
-    [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<MemberViewDTO>> Create([FromBody] MemberCreateFormDTO memberDto)
-    {
-        if(memberDto is null || !ModelState.IsValid)
-            return BadRequest("Invalid request for member creation");
-        
-        if (memberDto.Elo < 0 || memberDto.Elo > 3000)
-            return BadRequest("Elo must be between 0 and 3000");
-        
-        Member? toCreate;
-        
         try
         {
-            toCreate = await this._memberService.CreateAsync(memberDto.ToMember());
+            Member? member = await this._memberService.GetOneByIdAsync(id);
+
+            if (member is null)
+                return NotFound("This member doesn't exist");
+
+            return Ok(member.ToDTO());
+        }
+        catch (DBException e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
         }
         catch (Exception e)
         {
             return BadRequest(e.Message);
         }
-        
-        if (toCreate is null)
-            return BadRequest("Impossible to create this member");
-        
-        this._mailService.SendWelcome(toCreate);
-        
-        return CreatedAtAction(nameof(GetById), new { id = toCreate.Id }, toCreate.ToDTO());
     }
-    
+
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<MemberViewDTO>> Create([FromBody] MemberCreateFormDTO memberDto)
+    {
+        if(memberDto is null || !ModelState.IsValid)
+            return BadRequest("Invalid request for member creation");
+        
+        if (memberDto.Elo < MemberConst.MIN_ELO || memberDto.Elo > MemberConst.MAX_ELO)
+            return BadRequest($"Elo must be between ${MemberConst.MIN_ELO} and ${MemberConst.MAX_ELO}");
+        
+        try
+        {
+            Member? toCreate = await this._memberService.CreateAsync(memberDto.ToMember());
+            
+            if (toCreate is null)
+                return BadRequest("Impossible to create this member");
+            
+            this._mailService.SendWelcome(toCreate);
+        
+            return CreatedAtAction(nameof(GetById), new { id = toCreate.Id }, toCreate.ToDTO());
+        }
+        catch (DBException e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 }

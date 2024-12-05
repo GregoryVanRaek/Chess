@@ -37,6 +37,22 @@ public class MailService
         client.Disconnect(true);
     }
 
+    public void SendInvitation(Member member)
+    {
+        MimeMessage email = new MimeMessage();
+        email.From.Add(new MailboxAddress(_noReplyName, _noReplyEmail));
+        email.To.Add(new MailboxAddress(member.Username, member.Mail)); 
+        email.Subject = "New tournament";
+        email.Body = new TextPart(TextFormat.Plain)
+        {
+            Text = "Hello Chess-lover ! A new tournament has been created. \nCome on our site to register asap if you want to participate !" +
+                   "here is the link : localhost:4200\nWe hope you will join the game !"
+        };
+        using var client = GetSmtpClient();
+        client.Send(email);
+        client.Disconnect(true);
+    }
+
     private SmtpClient GetSmtpClient()
     {
         SmtpClient client = new SmtpClient();

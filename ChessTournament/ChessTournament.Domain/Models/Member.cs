@@ -10,6 +10,6 @@ public class Member
     public required string Password { get; set; }
     public required DateTime Birthday { get; set; }
     public required Gender Gender { get; set; }
-    public int? Elo { get; set; } = 1200;
+    public int? Elo { get; set; }
     public Role Role { get; set; } = Role.User;
 }

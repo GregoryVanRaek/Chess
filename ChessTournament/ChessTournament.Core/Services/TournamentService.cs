@@ -39,19 +39,32 @@ public class TournamentService :ITournamentService
         }
     }
 
-    public async Task<Tournament> CreateAsync(Tournament entity)
+    public Task<Tournament> CreateAsync(Tournament entity)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Tournament> CreateAsync(Tournament entity, List<CategoryEnum> categoryEnums)
     {
         try
         {
+            var categories = await _tournamentRepository.MapCategoriesAsync(categoryEnums);
+            entity.Categories = categories;
+            
             if(entity.PlayerMax < entity.PlayerMin )
                 throw new WrongValueException("Player max can't be less than player min");
             
-            if(entity.PlayerMax < entity.PlayerMin)
-                throw new WrongValueException("Elo max can't be less than Elo min");
+            if(entity.EloMin > entity.EloMax)
+                throw new WrongValueException($"Elo max can't be less than Elo min");
 
-            if (entity.CreationDate.AddDays(entity.PlayerMin) < entity.RegistrationEndDate)
-                throw new WrongValueException("The end date must be greater than the creation date + the number minimum of player");
-                
+            if (entity.CreationDate.AddDays(entity.PlayerMin) > entity.RegistrationEndDate)
+                throw new WrongValueException($"The end date must be greater than the creation date + the number minimum of player");
+
+            entity.State = TournamentState.WaitingForPlayer;
+            entity.ActualRound = 0;
+            entity.CreationDate = DateTime.Today;
+            entity.UpdateDate = entity.CreationDate;
+            
             return await this._tournamentRepository.CreateAsync(entity);
         }
         catch (DBException e)
