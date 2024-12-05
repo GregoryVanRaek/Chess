@@ -14,9 +14,9 @@ public class TournamentRepository :ITournamentRepository
         this._context = context;
     }
     
-    public async Task<List<Tournament>> GetAllAsync()
+    public IAsyncEnumerable<Tournament> GetAllAsync()
     {
-        return await this._context.Tournaments.ToListAsync();
+        return this._context.Tournaments.AsAsyncEnumerable();
     }
 
     public async Task<Tournament?> GetOneByIdAsync(int key)
@@ -26,16 +26,9 @@ public class TournamentRepository :ITournamentRepository
 
     public async Task<Tournament> CreateAsync(Tournament entity)
     {
-        try
-        {
-            Tournament insert = _context.Tournaments.Add(entity).Entity;
-            await _context.SaveChangesAsync();
-            return insert;
-        }
-        catch (Exception e)
-        {
-            throw new Exception("Error creating tournament", e);
-        }
+        Tournament insert = _context.Tournaments.Add(entity).Entity;
+        await _context.SaveChangesAsync();
+        return insert;
     }
 
     public Task<Tournament> UpdateAsync(Tournament entity)
@@ -45,22 +38,15 @@ public class TournamentRepository :ITournamentRepository
 
     public async Task<bool> DeleteAsync(Tournament entity)
     {
-        try
-        {
-            Tournament? toDelete = await GetOneByIdAsync((int)entity.Id);
+        Tournament? toDelete = await GetOneByIdAsync((int)entity.Id);
 
-            if (toDelete != null)
-            {
-                _context.Tournaments.Remove(toDelete);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-
-            return false;
-        }
-        catch (Exception e)
+        if (toDelete != null)
         {
-            throw new Exception("Error during delete in database: " + e.Message);
+            _context.Tournaments.Remove(toDelete);
+            await _context.SaveChangesAsync();
+            return true;
         }
+        
+        return false;
     }
 }

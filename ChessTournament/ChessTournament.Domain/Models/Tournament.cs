@@ -17,4 +17,5 @@ public class Tournament
     public required DateTime RegistrationEndDate {get; set;} = DateTime.Now;
     public required DateTime CreationDate {get; set;} = DateTime.Now;
     public required DateTime UpdateDate {get; set;}
+    public List<Category> Categories { get; set; } = new List<Category>();
 }

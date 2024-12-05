@@ -15,27 +15,27 @@ public class TournamentService :ITournamentService
         this._tournamentRepository = tournamentRepository;
     }
 
-    public async Task<List<Tournament>> GetAllAsync()
+    public IAsyncEnumerable<Tournament> GetAllAsync()
     {
         try
         {
-            return await _tournamentRepository.GetAllAsync();
+            return _tournamentRepository.GetAllAsync();
         }
-        catch (Exception e)
+        catch (DBException e)
         {
-            throw new Exception("Member service error: " + e.Message);
+            throw new DBException("Error while getting all tournament ");
         }
     }
 
-    public async Task<Tournament> GetOneByIdAsync(int key)
+    public Task<Tournament?> GetOneByIdAsync(int key)
     {
         try
         {
-            return await this._tournamentRepository.GetOneByIdAsync(key);
+            return this._tournamentRepository.GetOneByIdAsync(key);
         }
-        catch (Exception e)
+        catch (DBException e)
         {
-            throw new Exception("There was an error getting the tournament", e);
+            throw new DBException("Error while getting the tournament ");
         }
     }
 
@@ -54,9 +54,9 @@ public class TournamentService :ITournamentService
                 
             return await this._tournamentRepository.CreateAsync(entity);
         }
-        catch (Exception e)
+        catch (DBException e)
         {
-            throw new Exception("Tournament service error : " + e.Message);
+            throw new DBException("Error while creating a new tournament ");
         }
     }
 

@@ -18,15 +18,15 @@ public class MemberService : IMemberService
         _passwordService = passwordService;
     }
 
-    public async Task<List<Member>> GetAllAsync()
+    public IAsyncEnumerable<Member> GetAllAsync()
     {
         try
         {
-            return await _memberRepository.GetAllAsync();
+            return _memberRepository.GetAllAsync();
         }
-        catch (Exception e)
+        catch (DBException e)
         {
-            throw new Exception("Member service error: " + e.Message);
+            throw new DBException("Error while getting all members ");
         }
     }
 
@@ -36,56 +36,31 @@ public class MemberService : IMemberService
         {
             return await _memberRepository.GetOneByIdAsync(key);
         }
-        catch (Exception e)
+        catch (DBException e)
         {
-            throw new Exception("Member service error: " + e.Message);
+            throw new DBException("Error while getting the member ");
         }
     }
 
     public async Task<Member> CreateAsync(Member entity)
     {
+        await CheckUniqueAsync(entity);
+        
         try
         {
-            await CheckUniqueAsync(entity);
-
+            if (entity.Elo == 0)
+                entity.Elo = 1200;
+            
             entity.Password = _passwordService.HashPassword(entity.Password, entity.Mail);
 
             return await _memberRepository.CreateAsync(entity);
         }
-        catch (AlreadyExistException e)
+        catch (DBException e)
         {
-            throw;
-        }
-        catch (Exception e)
-        {
-            throw new Exception("Member service error: " + e.Message);
+            throw new DBException("Error while creating a new member");
         }
     }
-
-    public async Task<Member> UpdateAsync(Member entity)
-    {
-        try
-        {
-            return await _memberRepository.UpdateAsync(entity);
-        }
-        catch (Exception e)
-        {
-            throw new Exception("Member service error: ");
-        }
-    }
-
-    public async Task<bool> DeleteAsync(Member entity)
-    {
-        try
-        {
-            return await _memberRepository.DeleteAsync(entity);
-        }
-        catch (Exception e)
-        {
-            throw new Exception("Member service error: " + e.Message);
-        }
-    }
-
+    
     private async Task CheckUniqueAsync(Member entity)
     {
         Member? member = await _memberRepository.GetOneByEmailOrUsernameAsync(entity.Mail, entity.Username);

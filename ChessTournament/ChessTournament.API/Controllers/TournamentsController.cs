@@ -22,15 +22,22 @@ public class TournamentsController : ControllerBase
 
     [HttpGet("AllTournaments")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<IEnumerable<TournamentViewDTO>>> GetAll()
     {
-        List<Tournament> tournaments = await this._tournamentService.GetAllAsync();
-        
-        if(tournaments is null)
+        List<Tournament> tournaments = new List<Tournament>();
+            
+        await foreach (Tournament tournament in _tournamentService.GetAllAsync())
+            tournaments.Add(tournament);
+
+        if (!tournaments.Any())
             return NotFound("No tournament found");
-        
-        return Ok(tournaments.Select(TournamentMapper.ToListDTO));
+
+        IEnumerable<TournamentViewDTO> tournamentDTOs = tournaments.Select(TournamentMapper.ToListDTO);
+
+        return Ok(tournamentDTOs);
     }
     
 }

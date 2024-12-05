@@ -2,9 +2,11 @@
 using ChessTournament.API.Mappers;
 using ChessTournament.API.Services;
 using ChessTournament.Applications.Interfaces.Service;
+using ChessTournament.Domain.Exception;
 using ChessTournament.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace ChessTournament.API.Controllers;
 
@@ -21,17 +23,35 @@ public class MembersController : ControllerBase
         this._mailService = mailservice;
     }
     
-    [HttpGet("List")]
+    [HttpGet("AllMembers")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<IEnumerable<MemberViewDTO>>> GetAll()
     {
-        List<Member> members = await this._memberService.GetAllAsync();
-        
-        if(members is null)
-            return NotFound("No member found");
-        
-        return Ok(members.Select(MemberMapper.ToListDTO));
+        try
+        {
+            List<Member> members = new List<Member>();
+            
+            await foreach (Member member in _memberService.GetAllAsync())
+                members.Add(member);
+
+            if (!members.Any())
+                return NotFound("No member found");
+
+            IEnumerable<MemberViewDTO> memberDTOs = members.Select(MemberMapper.ToListDTO);
+
+            return Ok(memberDTOs);
+        }
+        catch (DBException e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [HttpGet("{id:int}")]
@@ -55,9 +75,6 @@ public class MembersController : ControllerBase
         if(memberDto is null || !ModelState.IsValid)
             return BadRequest("Invalid request for member creation");
         
-        if (memberDto.Elo == 0)
-            memberDto.Elo = 1200;
-
         if (memberDto.Elo < 0 || memberDto.Elo > 3000)
             return BadRequest("Elo must be between 0 and 3000");
         

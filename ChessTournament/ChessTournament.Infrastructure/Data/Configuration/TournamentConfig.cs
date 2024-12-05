@@ -11,7 +11,6 @@ public class TournamentConfig :IEntityTypeConfiguration<Tournament>
         builder.ToTable("Tournament");
         
         // field
-
         builder.Property(t => t.Id)
                .ValueGeneratedOnAdd();
         builder.Property(t => t.Name)
@@ -43,5 +42,10 @@ public class TournamentConfig :IEntityTypeConfiguration<Tournament>
         builder.ToTable(t => t.HasCheckConstraint("CK_PLAYER_MAX", "PLAYERMAX BETWEEN 0 AND 32"));
         builder.ToTable(t => t.HasCheckConstraint("CK_ELO_MIN", "ELOMIN IS NULL OR (ELOMIN BETWEEN 0 AND 3000)"));
         builder.ToTable(t => t.HasCheckConstraint("CK_ELO_MAX", "ELOMAX IS NULL OR (ELOMAX BETWEEN 0 AND 3000)"));
+
+        builder.HasMany(t => t.Categories)
+               .WithMany(c => c.Tournaments)
+               .UsingEntity("MM_Tournament_Category");
+
     }
 }
