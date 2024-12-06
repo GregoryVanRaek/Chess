@@ -38,6 +38,19 @@ public class TournamentService :ITournamentService
             throw new DBException("Error while getting the tournament ");
         }
     }
+    
+    public IEnumerable<Tournament> GetSomeTournament(int number)
+    {
+        try
+        {
+            return this._tournamentRepository.GetSomeTournament(number);
+        }
+        catch (DBException e)
+        {
+            throw new DBException("Error while getting the tournament ");
+        }
+    }
+
 
     public Task<Tournament> CreateAsync(Tournament entity)
     {

@@ -178,11 +178,41 @@ namespace ChessTournament.Infrastructure.Migrations
                     b.ToTable("MM_Tournament_Category");
                 });
 
+            modelBuilder.Entity("MM_Tournament_Player", b =>
+                {
+                    b.Property<int>("MembersId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TournamentsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MembersId", "TournamentsId");
+
+                    b.HasIndex("TournamentsId");
+
+                    b.ToTable("MM_Tournament_Player");
+                });
+
             modelBuilder.Entity("MM_Tournament_Category", b =>
                 {
                     b.HasOne("ChessTournament.Domain.Models.Category", null)
                         .WithMany()
                         .HasForeignKey("CategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ChessTournament.Domain.Models.Tournament", null)
+                        .WithMany()
+                        .HasForeignKey("TournamentsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MM_Tournament_Player", b =>
+                {
+                    b.HasOne("ChessTournament.Domain.Models.Member", null)
+                        .WithMany()
+                        .HasForeignKey("MembersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

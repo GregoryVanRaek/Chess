@@ -1,4 +1,5 @@
-﻿using ChessTournament.Domain.Enum;
+﻿using ChessTournament.API.DTO.Member;
+using ChessTournament.Domain.Enum;
 
 namespace ChessTournament.API.DTO.Tournament;
 
@@ -18,4 +19,5 @@ public class TournamentViewDTO
     public required DateTime CreationDate {get; set;}
     public required DateTime UpdateDate {get; set;}
     public List<CategoryValueDTO> Categories { get; set; }
+    public List<MemberViewDTO> Members { get; set; }
 }

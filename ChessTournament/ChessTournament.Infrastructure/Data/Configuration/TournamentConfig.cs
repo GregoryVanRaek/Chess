@@ -46,6 +46,10 @@ public class TournamentConfig :IEntityTypeConfiguration<Tournament>
         builder.HasMany(t => t.Categories)
                .WithMany(c => c.Tournaments)
                .UsingEntity("MM_Tournament_Category");
+        
+        builder.HasMany(m => m.Members)
+               .WithMany(m => m.Tournaments)
+               .UsingEntity("MM_Tournament_Player");
 
     }
 }

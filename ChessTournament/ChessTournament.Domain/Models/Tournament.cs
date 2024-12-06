@@ -18,4 +18,5 @@ public class Tournament
     public required DateTime CreationDate {get; set;} 
     public required DateTime UpdateDate {get; set;}
     public List<Category> Categories { get; set; } 
+    public List<Member> Members { get; set; }
 }

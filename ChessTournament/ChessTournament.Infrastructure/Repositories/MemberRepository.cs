@@ -17,17 +17,25 @@ public class MemberRepository : IMemberRepository
 
     public IAsyncEnumerable<Member> GetAllAsync()
     {
-        return this._context.Members.AsAsyncEnumerable();
+        return this._context.Members.Include(m => m.Tournaments)
+                                    .AsAsyncEnumerable();
     }
 
     public async Task<Member?> GetOneByIdAsync(int key)
     {
-        return await _context.Members.FirstOrDefaultAsync(m => m.Id == key);
+        return await _context.Members.Include(m => m.Tournaments)
+                                     .FirstOrDefaultAsync(m => m.Id == key);
     }
 
     public async Task<Member?> GetOneByEmailOrUsernameAsync(string mail, string username)
     {
-        return await _context.Members.FirstOrDefaultAsync(m => m.Username == username || m.Mail == mail);
+        return await _context.Members.Include(m => m.Tournaments)
+                                     .FirstOrDefaultAsync(m => m.Username == username || m.Mail == mail);
+    }
+    
+    public async Task<Member?> GetOneByEmailOrUsernameAsync(string username)
+    {
+        return await this.GetOneByEmailOrUsernameAsync(null, username);
     }
 
     public async Task<Member> CreateAsync(Member entity)

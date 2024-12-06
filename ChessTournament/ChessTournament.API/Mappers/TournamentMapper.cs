@@ -1,4 +1,5 @@
-﻿using ChessTournament.API.DTO.Tournament;
+﻿using ChessTournament.API.DTO.Member;
+using ChessTournament.API.DTO.Tournament;
 using ChessTournament.Domain.Enum;
 using ChessTournament.Domain.Models;
 
@@ -23,7 +24,8 @@ public static class TournamentMapper
             RegistrationEndDate = tournament.RegistrationEndDate,
             CreationDate = tournament.CreationDate,
             UpdateDate = tournament.UpdateDate,
-            Categories = tournament.Categories?.Select(c => new CategoryValueDTO { Name = c.Name.ToString() }).ToList() ?? new List<CategoryValueDTO>()
+            Categories = tournament.Categories?.Select(c => new CategoryValueDTO { Name = c.Name.ToString() }).ToList() ?? new List<CategoryValueDTO>(),
+            Members = tournament.Members?.Select(m => MemberMapper.ToListDTO(m)).ToList() ?? new List<MemberViewDTO>(),
         };
     }
     

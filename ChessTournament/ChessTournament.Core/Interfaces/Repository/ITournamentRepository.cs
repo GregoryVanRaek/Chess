@@ -6,5 +6,5 @@ namespace ChessTournament.Applications.Interfaces.Repository;
 public interface ITournamentRepository :IRepository<int, Tournament>
 {
     Task<List<Category>> MapCategoriesAsync(List<CategoryEnum> categoryEnums);
-    Task<Tournament> CreateAsync(Tournament entity, List<CategoryEnum> categoryEnums);
+    IEnumerable<Tournament> GetSomeTournament(int number);
 }

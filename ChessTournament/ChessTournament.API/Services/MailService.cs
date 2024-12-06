@@ -45,8 +45,30 @@ public class MailService
         email.Subject = "New tournament";
         email.Body = new TextPart(TextFormat.Plain)
         {
-            Text = "Hello Chess-lover ! A new tournament has been created. \nCome on our site to register asap if you want to participate !" +
-                   "here is the link : localhost:4200\nWe hope you will join the game !"
+            Text = "Hello Chess-lover,\n\nWe’re excited to announce that a new tournament has been created! " +
+                   "\n\nIf you’re ready to show your skills, head to our website to register and secure your spot before it’s too late!" +
+                   "\n\nHere’s the link to register: localhost:4200\n\nDon’t miss out – we hope to see you in the game soon!" +
+                   "\n\nBest regards,\nThe ChessTournament Team"
+        };
+        using var client = GetSmtpClient();
+        client.Send(email);
+        client.Disconnect(true);
+    }
+
+    public async Task SendCancellation(Member member)
+    {
+        MimeMessage email = new MimeMessage();
+        email.From.Add(new MailboxAddress(_noReplyName, _noReplyEmail));
+        email.To.Add(new MailboxAddress(member.Username, member.Mail)); 
+        email.Subject = "New tournament";
+        email.Body = new TextPart(TextFormat.Plain)
+        {
+            Text = "Hello Chess-lover,\n\nWe regret to inform you that a tournament has been canceled.\n" +
+                   "\nIf you had planned to participate or were interested, we apologize for any inconvenience this may have caused." +
+                   "\n\nStay tuned for upcoming tournaments and events on our website: localhost:4200." +
+                   "\n\nThank you for your understanding, and we hope to see you in future games!" +
+                   "\n\nBest regards,\nThe ChessTournament Team!"
+                   
         };
         using var client = GetSmtpClient();
         client.Send(email);

@@ -17,11 +17,13 @@ public class MembersController : ControllerBase
 {
     private readonly IMemberService _memberService;
     private readonly MailService _mailService;
+    private readonly AuthService _authService;
     
-    public MembersController(IMemberService memberService, MailService mailservice)
+    public MembersController(IMemberService memberService, MailService mailservice, AuthService authService)
     {
         this._memberService = memberService;
         this._mailService = mailservice;
+        this._authService = authService;
     }
     
     [HttpGet("AllMembers")]
@@ -110,4 +112,21 @@ public class MembersController : ControllerBase
             return BadRequest(e.Message);
         }
     }
+    
+    [HttpPost("login")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<string>> Login([FromBody] MemberLoginDTO user)
+    {
+        Member? response = await _memberService.Login(user.Username, user.Password);
+
+        if (response is not null)
+        {
+            string token = this._authService.GenerateToken(response);
+            return Ok(token);
+        }
+
+        return BadRequest("Invalid credentials");
+    }
+    
 }

@@ -12,4 +12,5 @@ public class Member
     public required Gender Gender { get; set; }
     public int? Elo { get; set; }
     public Role Role { get; set; } = Role.User;
+    public List<Tournament> Tournaments { get; set; } = new List<Tournament>();
 }

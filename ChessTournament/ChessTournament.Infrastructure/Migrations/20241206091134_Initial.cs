@@ -98,6 +98,30 @@ namespace ChessTournament.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "MM_Tournament_Player",
+                columns: table => new
+                {
+                    MembersId = table.Column<int>(type: "int", nullable: false),
+                    TournamentsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MM_Tournament_Player", x => new { x.MembersId, x.TournamentsId });
+                    table.ForeignKey(
+                        name: "FK_MM_Tournament_Player_Member_MembersId",
+                        column: x => x.MembersId,
+                        principalTable: "Member",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MM_Tournament_Player_Tournament_TournamentsId",
+                        column: x => x.TournamentsId,
+                        principalTable: "Tournament",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Category",
                 columns: new[] { "Id", "Name" },
@@ -124,19 +148,27 @@ namespace ChessTournament.Infrastructure.Migrations
                 name: "IX_MM_Tournament_Category_TournamentsId",
                 table: "MM_Tournament_Category",
                 column: "TournamentsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MM_Tournament_Player_TournamentsId",
+                table: "MM_Tournament_Player",
+                column: "TournamentsId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Member");
-
-            migrationBuilder.DropTable(
                 name: "MM_Tournament_Category");
 
             migrationBuilder.DropTable(
+                name: "MM_Tournament_Player");
+
+            migrationBuilder.DropTable(
                 name: "Category");
+
+            migrationBuilder.DropTable(
+                name: "Member");
 
             migrationBuilder.DropTable(
                 name: "Tournament");

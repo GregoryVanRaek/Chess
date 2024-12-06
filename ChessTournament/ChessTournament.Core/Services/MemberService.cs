@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using ChessTournament.Domain.Const;
 using ChessTournament.Domain.Enum;
 using ChessTournament.Domain.Exception;
+using Isopoh.Cryptography.Argon2;
 
 namespace ChessTournament.Applications.Services;
 
@@ -109,6 +110,18 @@ public class MemberService : IMemberService
                 }
             }
         }
+    }
+    
+    public async Task<Member> Login(string username, string password)
+    {
+        Member? member = await _memberRepository.GetOneByEmailOrUsernameAsync(username);
+
+        bool matchPassword = _passwordService.VerifyPassword(username, password, member.Password);
+        
+        if (member is not null && matchPassword)
+            return member;
+        
+        return null;
     }
     
 }

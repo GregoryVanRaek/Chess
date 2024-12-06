@@ -17,12 +17,28 @@ public class TournamentRepository :ITournamentRepository
     
     public IAsyncEnumerable<Tournament> GetAllAsync()
     {
-        return this._context.Tournaments.Include(c => c.Categories).AsAsyncEnumerable();
+        return this._context.Tournaments.Include(c => c.Categories)
+                                        .Include(m => m.Members)
+                                        .AsAsyncEnumerable();
     }
 
     public async Task<Tournament?> GetOneByIdAsync(int key)
     {
         return await _context.Tournaments.Include(c => c.Categories).SingleOrDefaultAsync(m => m.Id == key);
+    }
+
+    public IEnumerable<Tournament> GetSomeTournament(int number)
+    {
+        
+        IEnumerable<Tournament> tournaments =  this._context.Tournaments
+            .Include(c => c.Categories)
+            .Include(m => m.Members)
+            .Where(t => t.State == TournamentState.WaitingForPlayer) 
+            .OrderByDescending(t => t.UpdateDate)  
+            .Take(number)
+            .AsEnumerable();
+
+        return tournaments;
     }
 
     public async Task<Tournament> CreateAsync(Tournament entity)
@@ -43,16 +59,13 @@ public class TournamentRepository :ITournamentRepository
             throw new ArgumentNullException(nameof(entity), "The tournament to delete cannot be null.");
         
         Tournament? toDelete = await GetOneByIdAsync((int)entity.Id);
-
+        
         if (toDelete == null)
-        {
             throw new Exception("The member to delete doesn't exist");
-            return false;
-        }
+        
         _context.Tournaments.Remove(toDelete);
         await _context.SaveChangesAsync();
         return true;
-        
     }
     
     public async Task<List<Category>> MapCategoriesAsync(List<CategoryEnum> categoryEnums)

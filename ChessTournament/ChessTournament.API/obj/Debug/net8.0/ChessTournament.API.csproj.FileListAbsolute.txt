@@ -181,3 +181,4 @@ C:\Users\studentdot0414\Documents\Labo2\ChessTournament\ChessTournament.API\bin\
 C:\Users\studentdot0414\Documents\Labo2\ChessTournament\ChessTournament.API\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
 C:\Users\studentdot0414\Documents\Labo2\ChessTournament\ChessTournament.API\bin\Debug\net8.0\MailKit.dll
 C:\Users\studentdot0414\Documents\Labo2\ChessTournament\ChessTournament.API\bin\Debug\net8.0\MimeKit.dll
+C:\Users\studentdot0414\Documents\Labo2\ChessTournament\ChessTournament.API\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

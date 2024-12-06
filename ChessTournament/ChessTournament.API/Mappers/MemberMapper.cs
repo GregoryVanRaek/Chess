@@ -10,13 +10,11 @@ public static class MemberMapper
     {
         return new MemberViewDTO()
         {
-            Id = member.Id,
             Username = member.Username,
             Mail = member.Mail,
             Birthday = member.Birthday,
             Gender = member.Gender,
             Elo = member.Elo,
-            Role = member.Role
         };
     }
 

@@ -1,4 +1,5 @@
-﻿using ChessTournament.API.DTO.Tournament;
+﻿using System.Collections;
+using ChessTournament.API.DTO.Tournament;
 using ChessTournament.API.Mappers;
 using ChessTournament.API.Services;
 using ChessTournament.Applications.Interfaces.Service;
@@ -33,16 +34,57 @@ public class TournamentsController : ControllerBase
     public async Task<ActionResult<IEnumerable<TournamentViewDTO>>> GetAll()
     {
         List<Tournament> tournaments = new List<Tournament>();
+        try
+        {
+            await foreach (Tournament tournament in _tournamentService.GetAllAsync())
+                tournaments.Add(tournament);
+
+            if (!tournaments.Any())
+                return NotFound("No tournament found");
+
+            IEnumerable<TournamentViewDTO> tournamentDTOs = tournaments.Select(TournamentMapper.ToDTO);
+
+            return Ok(tournamentDTOs);
+        }
+        catch (DBException e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    [HttpGet("open/{number:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<IEnumerable<TournamentViewDTO>>> GetSomeTournaments([FromRoute] int number)
+    {
+        IEnumerable<Tournament> tournaments = new List<Tournament>();
+
+        try
+        {
+            tournaments = _tournamentService.GetSomeTournament(number);
             
-        await foreach (Tournament tournament in _tournamentService.GetAllAsync())
-            tournaments.Add(tournament);
+            if (!tournaments.Any())
+                return NotFound("Any tournament open");
+            
+            IEnumerable<TournamentViewDTO> tournamentDTOs = tournaments.Select(TournamentMapper.ToDTO);
 
-        if (!tournaments.Any())
-            return NotFound("No tournament found");
-
-        IEnumerable<TournamentViewDTO> tournamentDTOs = tournaments.Select(TournamentMapper.ToDTO);
-
-        return Ok(tournamentDTOs);
+            return Ok(tournamentDTOs);
+            
+        }
+        catch (DBException e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
     
     [HttpGet("{id:int}")]
@@ -126,8 +168,11 @@ public class TournamentsController : ControllerBase
             if(toDelete is null)
                 return NotFound("This tournament doesn't exist");
 
-            await this._tournamentService.DeleteAsync(toDelete);
+            foreach (Member m in toDelete.Members)
+                           await _mailService.SendCancellation(m);
             
+            await this._tournamentService.DeleteAsync(toDelete);
+
             return NoContent();
         }
         catch (DBException e)

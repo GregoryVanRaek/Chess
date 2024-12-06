@@ -20,11 +20,13 @@ public class PasswordService : IPasswordService
         return Argon2.Hash(saltedPassword); 
     }
 
-    public bool VerifyPassword(string enteredPassword, string storedHash, string email)
+    public bool VerifyPassword(string email, string enteredPassword, string storedHash)
     {
         string salt = GenerateSalt(email);
         string saltedPassword = salt + enteredPassword;
         string hashedPassword = Argon2.Hash(saltedPassword);
-        return hashedPassword == storedHash;
+        Console.WriteLine(hashedPassword);
+        Console.WriteLine(storedHash);
+        return Argon2.Verify(hashedPassword, storedHash);
     }
 }
