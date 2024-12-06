@@ -23,6 +23,7 @@ public static class TournamentMapper
             RegistrationEndDate = tournament.RegistrationEndDate,
             CreationDate = tournament.CreationDate,
             UpdateDate = tournament.UpdateDate,
+            Categories = tournament.Categories?.Select(c => new CategoryValueDTO { Name = c.Name.ToString() }).ToList() ?? new List<CategoryValueDTO>()
         };
     }
     

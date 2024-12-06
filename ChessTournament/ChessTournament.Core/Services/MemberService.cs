@@ -84,21 +84,29 @@ public class MemberService : IMemberService
 
     public async IAsyncEnumerable<Member> CheckParticipation(Tournament tournament)
     {
-        var memberConcerned = GetAllAsync().ToBlockingEnumerable()
-            .Where(m => m.Elo <= tournament.EloMax && m.Elo >= tournament.EloMin);
-        
-        if (tournament.WomenOnly)
-            memberConcerned = memberConcerned.Where(m => m.Gender != Gender.Male);
-        
-        foreach (var member in memberConcerned)
-        {
-            int age = await CheckMemberAge(member, tournament.RegistrationEndDate);
+        var juniorCategory = tournament.Categories.Any(c => c.Name == CategoryEnum.Junior);
+        var seniorCategory = tournament.Categories.Any(c => c.Name == CategoryEnum.Senior);
+        var veteranCategory = tournament.Categories.Any(c => c.Name == CategoryEnum.Veteran);
 
-            if (!((age < 18 && tournament.Categories.Any(c => c.Name == CategoryEnum.Junior))
-                || (age >= 18 && age < 60 && tournament.Categories.Any(c => c.Name ==CategoryEnum.Senior))
-                || (age >= 60 && tournament.Categories.Any(c => c.Name == CategoryEnum.Veteran))))
+        bool IsEligibleForCategory(int age)
+        {
+            return (age < 18 && juniorCategory) ||
+                   (age >= 18 && age < 60 && seniorCategory) ||
+                   (age >= 60 && veteranCategory);
+        }
+        
+        await foreach (var member in GetAllAsync())
+        {
+            if (member.Elo <= tournament.EloMax && member.Elo >= tournament.EloMin &&
+                (!tournament.WomenOnly || member.Gender != Gender.Male))
             {
-                yield return member;
+                int age = await CheckMemberAge(member, tournament.RegistrationEndDate);
+
+                if (IsEligibleForCategory(age))
+                {
+                    Console.WriteLine(member);
+                    yield return member;
+                }
             }
         }
     }

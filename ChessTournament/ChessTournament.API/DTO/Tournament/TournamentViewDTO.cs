@@ -17,4 +17,5 @@ public class TournamentViewDTO
     public required DateTime RegistrationEndDate {get; set;} 
     public required DateTime CreationDate {get; set;}
     public required DateTime UpdateDate {get; set;}
+    public List<CategoryValueDTO> Categories { get; set; }
 }

@@ -37,7 +37,7 @@ public class MailService
         client.Disconnect(true);
     }
 
-    public void SendInvitation(Member member)
+    public async Task SendInvitation(Member member)
     {
         MimeMessage email = new MimeMessage();
         email.From.Add(new MailboxAddress(_noReplyName, _noReplyEmail));

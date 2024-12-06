@@ -82,7 +82,7 @@ public class TournamentService :ITournamentService
     {
         Tournament toDelete = await GetOneByIdAsync((int)entity.Id);
         
-        if (toDelete is not null && toDelete.State != TournamentState.WaitingForPlayer)
+        if (toDelete is not null && toDelete.State == TournamentState.WaitingForPlayer)
         {
             await this._tournamentRepository.DeleteAsync(toDelete);
             return true;

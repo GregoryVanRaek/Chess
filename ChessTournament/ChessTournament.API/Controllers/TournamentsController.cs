@@ -90,17 +90,16 @@ public class TournamentsController : ControllerBase
         
         try
         {
-
             Tournament? toCreate = await _tournamentService.CreateAsync(tournamentDto.ToTournament(), 
                 tournamentDto.Categories.ToCategoryEnums());
             
             if (toCreate is null)
                 return BadRequest("Impossible to create this tournament");
 
-            var participants = this._memberService.CheckParticipation(toCreate).ToBlockingEnumerable();
+            IEnumerable<Member> participants = this._memberService.CheckParticipation(toCreate).ToBlockingEnumerable();
             
             foreach(Member m in participants)
-                _mailService.SendInvitation(m);
+                await _mailService.SendInvitation(m);
             
             return CreatedAtAction(nameof(GetById), new { id = toCreate.Id }, toCreate.ToDTO());
         }
@@ -112,6 +111,33 @@ public class TournamentsController : ControllerBase
         {
             return BadRequest(e.Message);
         }
-    } 
+    }
+
+    [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<ActionResult> Delete([FromRoute] int id)
+    {
+        try
+        {
+            Tournament toDelete = await this._tournamentService.GetOneByIdAsync(id);
+            
+            if(toDelete is null)
+                return NotFound("This tournament doesn't exist");
+
+            await this._tournamentService.DeleteAsync(toDelete);
+            
+            return NoContent();
+        }
+        catch (DBException e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
     
 }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ChessTournament.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d30691fe0bf5d0918724b7a18241d9c698ec5d39")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+29f92e4c692b2406d74d69629cc682b94c3f86a4")]
 [assembly: System.Reflection.AssemblyProductAttribute("ChessTournament.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ChessTournament.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
