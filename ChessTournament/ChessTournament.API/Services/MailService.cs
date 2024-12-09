@@ -60,7 +60,7 @@ public class MailService
         MimeMessage email = new MimeMessage();
         email.From.Add(new MailboxAddress(_noReplyName, _noReplyEmail));
         email.To.Add(new MailboxAddress(member.Username, member.Mail)); 
-        email.Subject = "New tournament";
+        email.Subject = "Deleted tournament";
         email.Body = new TextPart(TextFormat.Plain)
         {
             Text = "Hello Chess-lover,\n\nWe regret to inform you that a tournament has been canceled.\n" +

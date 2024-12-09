@@ -24,7 +24,9 @@ public class TournamentRepository :ITournamentRepository
 
     public async Task<Tournament?> GetOneByIdAsync(int key)
     {
-        return await _context.Tournaments.Include(c => c.Categories).SingleOrDefaultAsync(m => m.Id == key);
+        return await _context.Tournaments.Include(c => c.Categories)
+                                         .Include(m => m.Members)
+                                         .SingleOrDefaultAsync(m => m.Id == key);
     }
 
     public IEnumerable<Tournament> GetSomeTournament(int number)

@@ -168,8 +168,11 @@ public class TournamentsController : ControllerBase
             if(toDelete is null)
                 return NotFound("This tournament doesn't exist");
 
-            foreach (Member m in toDelete.Members)
-                           await _mailService.SendCancellation(m);
+            if (toDelete.Members.Count > 0)
+            {
+                foreach (Member m in toDelete.Members)
+                   await _mailService.SendCancellation(m);
+            }
             
             await this._tournamentService.DeleteAsync(toDelete);
 
