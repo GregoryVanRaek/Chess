@@ -75,6 +75,26 @@ namespace ChessTournament.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Game",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoundNumber = table.Column<int>(type: "int", nullable: false),
+                    Result = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TournamentId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Game", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Game_Tournament_TournamentId",
+                        column: x => x.TournamentId,
+                        principalTable: "Tournament",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MM_Tournament_Category",
                 columns: table => new
                 {
@@ -122,6 +142,31 @@ namespace ChessTournament.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "MM_Games_Players",
+                columns: table => new
+                {
+                    MemberId = table.Column<int>(type: "int", nullable: false),
+                    GameId = table.Column<int>(type: "int", nullable: false),
+                    Color = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MM_Games_Players", x => new { x.MemberId, x.GameId });
+                    table.ForeignKey(
+                        name: "FK_MM_Games_Players_Game_GameId",
+                        column: x => x.GameId,
+                        principalTable: "Game",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MM_Games_Players_Member_MemberId",
+                        column: x => x.MemberId,
+                        principalTable: "Member",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Category",
                 columns: new[] { "Id", "Name" },
@@ -131,6 +176,11 @@ namespace ChessTournament.Infrastructure.Migrations
                     { 2, "Veteran" },
                     { 3, "Senior" }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Game_TournamentId",
+                table: "Game",
+                column: "TournamentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Member_Mail",
@@ -143,6 +193,11 @@ namespace ChessTournament.Infrastructure.Migrations
                 table: "Member",
                 column: "Username",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MM_Games_Players_GameId",
+                table: "MM_Games_Players",
+                column: "GameId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MM_Tournament_Category_TournamentsId",
@@ -159,10 +214,16 @@ namespace ChessTournament.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "MM_Games_Players");
+
+            migrationBuilder.DropTable(
                 name: "MM_Tournament_Category");
 
             migrationBuilder.DropTable(
                 name: "MM_Tournament_Player");
+
+            migrationBuilder.DropTable(
+                name: "Game");
 
             migrationBuilder.DropTable(
                 name: "Category");

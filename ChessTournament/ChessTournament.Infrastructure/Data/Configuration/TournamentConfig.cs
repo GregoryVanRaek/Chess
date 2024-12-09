@@ -51,5 +51,9 @@ public class TournamentConfig :IEntityTypeConfiguration<Tournament>
                .WithMany(m => m.Tournaments)
                .UsingEntity("MM_Tournament_Player");
 
+        builder.HasMany(t => t.Games)
+               .WithOne(g => g.Tournament)
+               .HasForeignKey(g => g.TournamentId);
+       
     }
 }

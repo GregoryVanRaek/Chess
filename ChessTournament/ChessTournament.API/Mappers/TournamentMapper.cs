@@ -27,6 +27,7 @@ public static class TournamentMapper
             UpdateDate = tournament.UpdateDate,
             Categories = tournament.Categories?.Select(c => new CategoryValueDTO { Name = c.Name.ToString() }).ToList() ?? new List<CategoryValueDTO>(),
             Members = tournament.Members?.Select(m => MemberMapper.ToListDTO(m)).ToList() ?? new List<MemberViewDTO>(),
+            Games = tournament.Games.ToListDTO()
         };
     }
     
@@ -46,6 +47,21 @@ public static class TournamentMapper
             RegistrationEndDate = tournamentFormDTO.RegistrationEndDate,
             CreationDate = DateTime.Today,
             UpdateDate = DateTime.Now,
+            Games = new List<Game>(),
+            Members = new List<Member>()
+        };
+    }
+
+    public static TournamentPlayerView ToTournamentPlayerView(this Tournament tournament)
+    {
+        return new TournamentPlayerView()
+        {
+            Id = tournament.Id,
+            Name = tournament.Name,
+            Place = tournament.Place,
+            State = tournament.State,
+            ActualRound = tournament.ActualRound,
+            RegistrationEndDate = tournament.RegistrationEndDate
         };
     }
 

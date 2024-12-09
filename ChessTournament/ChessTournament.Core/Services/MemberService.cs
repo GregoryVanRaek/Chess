@@ -102,16 +102,35 @@ public class MemberService : IMemberService
                 }
             }
         }
-        
-        
+    }
+    
+    public bool CheckOneParticipation(Tournament tournament, Member member)
+    {
+        if (CheckTournamentValidity(tournament))
+        {
+            if (!tournament.Members.Contains(member))
+            {
+                int age = CheckMemberAge(member, tournament);
+
+                if (CheckCategory(age, tournament) 
+                    && CheckElo(member.Elo, tournament)
+                    && CheckGender(member.Gender, tournament))
+                {
+                    Console.WriteLine(member);
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
     
     private bool CheckTournamentValidity(Tournament tournament)
-        {
-            return    tournament.State == TournamentState.WaitingForPlayer
-                   && tournament.RegistrationEndDate.Date > DateTime.Now.Date
-                   && tournament.Members.Count < tournament.PlayerMax;
-        }
+    {
+        return    tournament.State == TournamentState.WaitingForPlayer
+               && tournament.RegistrationEndDate.Date > DateTime.Now.Date
+               && tournament.Members.Count < tournament.PlayerMax;
+    }
 
     private bool CheckCategory(int age, Tournament tournament)
     {
@@ -146,7 +165,6 @@ public class MemberService : IMemberService
         return (tournament.WomenOnly && (gender == Gender.Female || gender == Gender.Other)
                 || !tournament.WomenOnly && gender == Gender.Male);
     }
-    
     
     #endregion
     

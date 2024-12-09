@@ -40,6 +40,10 @@ public class MemberConfig : IEntityTypeConfiguration<Member>
                .IsUnique();
         
         builder.ToTable(m => m.HasCheckConstraint("CK_ELO", "ELO BETWEEN 0 AND 3000"));
-
+        
+        builder.HasMany(m => m.GameMembers)
+               .WithOne(gm => gm.Member)
+               .HasForeignKey(gm => gm.MemberId);
+        
     }
 }

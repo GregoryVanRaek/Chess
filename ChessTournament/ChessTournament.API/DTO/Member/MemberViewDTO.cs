@@ -1,4 +1,5 @@
-﻿using ChessTournament.Domain.Enum;
+﻿using ChessTournament.API.DTO.Tournament;
+using ChessTournament.Domain.Enum;
 
 namespace ChessTournament.API.DTO.Member;
 

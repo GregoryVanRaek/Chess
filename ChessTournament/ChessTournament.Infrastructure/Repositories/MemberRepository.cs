@@ -18,18 +18,21 @@ public class MemberRepository : IMemberRepository
     public IAsyncEnumerable<Member> GetAllAsync()
     {
         return this._context.Members.Include(m => m.Tournaments)
+                                    .Include(m => m.GameMembers)                        
                                     .AsAsyncEnumerable();
     }
 
     public async Task<Member?> GetOneByIdAsync(int key)
     {
         return await _context.Members.Include(m => m.Tournaments)
+                                     .Include(m => m.GameMembers)                         
                                      .FirstOrDefaultAsync(m => m.Id == key);
     }
 
     public async Task<Member?> GetOneByEmailOrUsernameAsync(string credential)
     {
         return await _context.Members.Include(m => m.Tournaments)
+                                     .Include(m => m.GameMembers)                         
                                      .FirstOrDefaultAsync(m => m.Username == credential || m.Mail == credential);
     }
 
@@ -67,4 +70,5 @@ public class MemberRepository : IMemberRepository
 
         return false;
     }
+    
 }

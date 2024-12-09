@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using ChessTournament.API.DTO.Member;
 using ChessTournament.API.DTO.Tournament;
 using ChessTournament.API.Mappers;
 using ChessTournament.API.Services;
@@ -72,7 +73,8 @@ public class TournamentsController : ControllerBase
             if (!tournaments.Any())
                 return NotFound("Any tournament open");
             
-            IEnumerable<TournamentViewDTO> tournamentDTOs = tournaments.Select(TournamentMapper.ToDTO);
+            IEnumerable<TournamentViewDTO> tournamentDTOs = tournaments.Where(t => t.PlayerMax > t.Members.Count)
+                                                                       .Select(TournamentMapper.ToDTO);
 
             return Ok(tournamentDTOs);
             
@@ -187,5 +189,96 @@ public class TournamentsController : ControllerBase
             return BadRequest(e.Message);
         }
     }
+
+    [HttpPost("addplayer")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<TournamentViewDTO>> AddPlayer([FromBody] AddPlayerDTO playerTournamentDTO)
+    {
+        try
+        {
+            Member? member = await this._memberService.GetOneByIdAsync(playerTournamentDTO.playerId);
+            Tournament? tournament = await this._tournamentService.GetOneByIdAsync(playerTournamentDTO.tournamentId);
+            
+            if(member is null)
+                return NotFound("This member doesn't exist");
+
+            if (tournament is null)
+                return NotFound("this tournament doesn't exist");
+
+            await this._tournamentService.AddPlayer(tournament, member);
+
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest();
+        }
+    }
+    
+    [HttpPost("removeplayer")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<TournamentViewDTO>> RemovePlayer([FromBody] AddPlayerDTO playerTournamentDTO)
+    {
+        try
+        {
+            Member? member = await this._memberService.GetOneByIdAsync(playerTournamentDTO.playerId);
+            Tournament? tournament = await this._tournamentService.GetOneByIdAsync(playerTournamentDTO.tournamentId);
+            
+            if(member is null)
+                return NotFound("This member doesn't exist");
+
+            if (tournament is null)
+                return NotFound("this tournament doesn't exist");
+
+            if (!tournament.Members.Contains(member))
+                return BadRequest("You are not registered to this tournament");
+
+            if (tournament.State == TournamentState.WaitingForPlayer)
+            {
+                await this._tournamentService.RemovePlayer(tournament, member);
+                return Ok();
+            }
+            
+            return BadRequest("You can't unregister when the tournament has already begin");
+        }
+        catch (Exception e)
+        {
+            return BadRequest();
+        }
+    }
+
+    [HttpPost("start/{tournamentId:int}")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<TournamentViewDTO>> StartTournament([FromRoute] int tournamentId)
+    {
+        try
+        {
+            Tournament? tournamentToStart = await this._tournamentService.GetOneByIdAsync(tournamentId);
+
+            if (tournamentToStart is null)
+                return NotFound("This tournament doesn't exist");
+
+            if (tournamentToStart.Members.Count < tournamentToStart.PlayerMin)
+                return BadRequest("Impossible to start the tournament. The number minimum of player is not reached");
+
+            if (tournamentToStart.RegistrationEndDate > DateTime.Today)
+                return BadRequest("Impossible to start the tournament. The period of registration is still open");
+
+            await this._tournamentService.StartTournament(tournamentToStart);
+
+            return Created();
+        }
+        catch (Exception e)
+        {
+            return BadRequest();
+        }
+    } 
     
 }

@@ -9,10 +9,12 @@ namespace ChessTournament.Applications.Services;
 public class TournamentService :ITournamentService
 {
     private readonly ITournamentRepository _tournamentRepository;
+    private readonly IMemberService _memberService;
 
-    public TournamentService(ITournamentRepository tournamentRepository)
+    public TournamentService(ITournamentRepository tournamentRepository, IMemberService memberService)
     {
         this._tournamentRepository = tournamentRepository;
+        this._memberService = memberService;
     }
 
     public IAsyncEnumerable<Tournament> GetAllAsync()
@@ -50,8 +52,7 @@ public class TournamentService :ITournamentService
             throw new DBException("Error while getting the tournament ");
         }
     }
-
-
+    
     public Task<Tournament> CreateAsync(Tournament entity)
     {
         throw new NotImplementedException();
@@ -102,5 +103,103 @@ public class TournamentService :ITournamentService
         }
 
         return false;
+    }
+
+    public async Task<int> AddPlayer(Tournament tournament, Member member)
+    {
+        try
+        {
+            if (_memberService.CheckOneParticipation(tournament, member))
+                return await this._tournamentRepository.AddPlayers(tournament, member);
+
+            return 0;
+
+        }
+        catch (Exception e)
+        {
+            throw new DBException("An error occured while adding a member to the tournament");
+        }
+    }
+
+    public async Task<int> RemovePlayer(Tournament tournament, Member member)
+    {
+        try
+        {
+            if (tournament.Members.Contains(member))
+                return await this._tournamentRepository.RemovePlayers(tournament, member);
+
+            return 0;
+        }
+        catch (Exception e)
+        {
+            throw new DBException("An error occured while adding a member to the tournament");
+        }
+    }
+
+    public async Task<Tournament> StartTournament(Tournament toStart)
+    {
+        try
+        {
+            toStart.ActualRound = 1;
+            toStart.UpdateDate = DateTime.Today;
+            toStart.State = TournamentState.InProgress;
+
+            toStart.Games = this.GenerateGames(toStart);
+
+            return await this._tournamentRepository.StartTournament(toStart);
+        }
+        catch (Exception e)
+        {
+            throw new DBException("An error occured while starting the tournament");
+        }
+    }
+    
+    private List<Game> GenerateGames(Tournament tournament)
+    {
+        List<Game> games = new List<Game>();
+        int numberOfPlayers = tournament.Members.Count;
+
+        List<Member> players = tournament.Members;
+        
+        int numberOfRounds = numberOfPlayers - 1; 
+
+        for (int round = 0; round < numberOfRounds; round++)
+        {
+            for (int i = 0; i < numberOfPlayers / 2; i++)
+            {
+                Member player1 = players[i];
+                Member player2 = players[numberOfPlayers - 1 - i];
+                
+                Game game = new Game
+                {
+                    RoundNumber = 1,
+                    Result = GameEnum.Unplayed,
+                    Tournament = tournament,
+                    GameMembers = new List<GameMember>
+                    {
+                        new GameMember
+                        {
+                            Member = player1,
+                            Color = (round % 2 == 0) ? ColorEnum.White : ColorEnum.Black 
+                        },
+                        new GameMember
+                        {
+                            Member = player2,
+                            Color = (round % 2 == 0) ? ColorEnum.Black : ColorEnum.White
+                        }
+                    }
+                };
+                games.Add(game);
+            }
+
+            Member lastPlayer = players[numberOfPlayers - 1];
+            for (int i = numberOfPlayers - 1; i > 1; i--)
+            {
+                players[i] = players[i - 1];
+            }
+            players[1] = lastPlayer;
+        }
+
+        return games;
     }
 }

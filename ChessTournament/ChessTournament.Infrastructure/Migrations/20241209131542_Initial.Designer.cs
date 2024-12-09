@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChessTournament.Infrastructure.Migrations
 {
     [DbContext(typeof(DbContextChessTournament))]
-    [Migration("20241206091134_Initial")]
+    [Migration("20241209131542_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -57,6 +57,50 @@ namespace ChessTournament.Infrastructure.Migrations
                             Id = 3,
                             Name = "Senior"
                         });
+                });
+
+            modelBuilder.Entity("ChessTournament.Domain.Models.Game", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Result")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RoundNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TournamentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TournamentId");
+
+                    b.ToTable("Game", (string)null);
+                });
+
+            modelBuilder.Entity("ChessTournament.Domain.Models.GameMember", b =>
+                {
+                    b.Property<int>("MemberId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MemberId", "GameId");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("MM_Games_Players", (string)null);
                 });
 
             modelBuilder.Entity("ChessTournament.Domain.Models.Member", b =>
@@ -196,6 +240,34 @@ namespace ChessTournament.Infrastructure.Migrations
                     b.ToTable("MM_Tournament_Player");
                 });
 
+            modelBuilder.Entity("ChessTournament.Domain.Models.Game", b =>
+                {
+                    b.HasOne("ChessTournament.Domain.Models.Tournament", "Tournament")
+                        .WithMany("Games")
+                        .HasForeignKey("TournamentId");
+
+                    b.Navigation("Tournament");
+                });
+
+            modelBuilder.Entity("ChessTournament.Domain.Models.GameMember", b =>
+                {
+                    b.HasOne("ChessTournament.Domain.Models.Game", "Game")
+                        .WithMany("GameMembers")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ChessTournament.Domain.Models.Member", "Member")
+                        .WithMany("GameMembers")
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+
+                    b.Navigation("Member");
+                });
+
             modelBuilder.Entity("MM_Tournament_Category", b =>
                 {
                     b.HasOne("ChessTournament.Domain.Models.Category", null)
@@ -224,6 +296,21 @@ namespace ChessTournament.Infrastructure.Migrations
                         .HasForeignKey("TournamentsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ChessTournament.Domain.Models.Game", b =>
+                {
+                    b.Navigation("GameMembers");
+                });
+
+            modelBuilder.Entity("ChessTournament.Domain.Models.Member", b =>
+                {
+                    b.Navigation("GameMembers");
+                });
+
+            modelBuilder.Entity("ChessTournament.Domain.Models.Tournament", b =>
+                {
+                    b.Navigation("Games");
                 });
 #pragma warning restore 612, 618
         }

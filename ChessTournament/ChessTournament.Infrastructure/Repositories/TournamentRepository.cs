@@ -1,5 +1,6 @@
 ﻿using ChessTournament.Applications.Interfaces.Repository;
 using ChessTournament.Domain.Enum;
+using ChessTournament.Domain.Exception;
 using ChessTournament.Domain.Models;
 using ChessTournament.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,9 @@ public class TournamentRepository :ITournamentRepository
     {
         return this._context.Tournaments.Include(c => c.Categories)
                                         .Include(m => m.Members)
+                                        .Include(t => t.Games)
+                                        .ThenInclude(g => g.GameMembers)
+                                        .ThenInclude(gm => gm.Member) 
                                         .AsAsyncEnumerable();
     }
 
@@ -26,6 +30,9 @@ public class TournamentRepository :ITournamentRepository
     {
         return await _context.Tournaments.Include(c => c.Categories)
                                          .Include(m => m.Members)
+                                         .Include(t => t.Games)
+                                         .ThenInclude(g => g.GameMembers)
+                                         .ThenInclude(gm => gm.Member)
                                          .SingleOrDefaultAsync(m => m.Id == key);
     }
 
@@ -35,6 +42,9 @@ public class TournamentRepository :ITournamentRepository
         IEnumerable<Tournament> tournaments =  this._context.Tournaments
             .Include(c => c.Categories)
             .Include(m => m.Members)
+            .Include(t => t.Games)
+            .ThenInclude(g => g.GameMembers)
+            .ThenInclude(gm => gm.Member)
             .Where(t => t.State == TournamentState.WaitingForPlayer) 
             .OrderByDescending(t => t.UpdateDate)  
             .Take(number)
@@ -87,9 +97,36 @@ public class TournamentRepository :ITournamentRepository
 
         return categories;
     }
+    
+    public async Task<int> AddPlayers(Tournament tournament, Member member)
+    {
+        Tournament? t = await this.GetOneByIdAsync((int)tournament.Id);
+        t.Members.Add(member);
+   
+        return await this._context.SaveChangesAsync();
+    }
+    
+    public async Task<int> RemovePlayers(Tournament tournament, Member member)
+    {
+        Tournament? t = await this.GetOneByIdAsync((int)tournament.Id);
+        t.Members.Remove(member);
+   
+        return await this._context.SaveChangesAsync();
+    }
 
     public Task<Tournament> CreateAsync(Tournament entity, List<CategoryEnum> categoryEnums)
     {
         throw new NotImplementedException();
     }
+
+    public async Task<Tournament> StartTournament(Tournament entity)
+    {
+        Tournament? t = await this.GetOneByIdAsync((int)entity.Id);
+        
+        _context.Entry(t).CurrentValues.SetValues(entity);
+        await _context.SaveChangesAsync();
+
+        return t;
+    }
+    
 }

@@ -12,7 +12,9 @@ public class DbContextChessTournament : DbContext
     public DbSet<Member> Members { get; set; }
     public DbSet<Tournament> Tournaments { get; set; }
     public DbSet<Category> Categories { get; set; }
-
+    public DbSet<Game> Games { get; set; }
+    public DbSet<GameMember> GameMembers { get; set; }
+    
     #endregion
 
     
@@ -21,5 +23,7 @@ public class DbContextChessTournament : DbContext
         modelBuilder.ApplyConfiguration(new MemberConfig());
         modelBuilder.ApplyConfiguration(new TournamentConfig());
         modelBuilder.ApplyConfiguration(new CategoryConfig());
+        modelBuilder.ApplyConfiguration(new GameConfig());
+        modelBuilder.ApplyConfiguration(new GameMemberConfig());
     }
 }
