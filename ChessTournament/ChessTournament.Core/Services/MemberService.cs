@@ -13,12 +13,10 @@ namespace ChessTournament.Applications.Services;
 public class MemberService : IMemberService
 {
     private readonly IMemberRepository _memberRepository;
-    private readonly IPasswordService _passwordService;
 
-    public MemberService(IMemberRepository memberRepository, IPasswordService passwordService)
+    public MemberService(IMemberRepository memberRepository)
     {
         _memberRepository = memberRepository;
-        _passwordService = passwordService;
     }
 
     public IAsyncEnumerable<Member> GetAllAsync()
@@ -54,7 +52,7 @@ public class MemberService : IMemberService
             if (entity.Elo is null || entity.Elo == 0)
                 entity.Elo = MemberConst.DEFAULT_ELO;
             
-            entity.Password = _passwordService.HashPassword(entity.Password, entity.Mail);
+            entity.Password = Argon2.Hash(entity.Password);
 
             return await _memberRepository.CreateAsync(entity);
         }
@@ -66,7 +64,7 @@ public class MemberService : IMemberService
     
     private async Task CheckUniqueAsync(Member entity)
     {
-        Member? member = await _memberRepository.GetOneByEmailOrUsernameAsync(entity.Mail, entity.Username);
+        Member? member = await _memberRepository.GetOneByEmailOrUsernameAsync(entity.Username);
 
         if (member != null && (member.Mail == entity.Mail || member.Username == entity.Username))
             throw new AlreadyExistException("Member already exists");
@@ -115,10 +113,8 @@ public class MemberService : IMemberService
     public async Task<Member> Login(string username, string password)
     {
         Member? member = await _memberRepository.GetOneByEmailOrUsernameAsync(username);
-
-        bool matchPassword = _passwordService.VerifyPassword(username, password, member.Password);
         
-        if (member is not null && matchPassword)
+        if (member is not null && Argon2.Verify(member.Password, password))
             return member;
         
         return null;

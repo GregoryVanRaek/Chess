@@ -4,6 +4,8 @@ namespace ChessTournament.API.DTO.Member;
 
 public class MemberLoginDTO
 {
-    public required string Username;
-    public required string Password;
+    [Required]
+    public string Username { get; set; }
+    [Required]
+    public string Password { get; set; }
 }

@@ -119,7 +119,7 @@ public class MembersController : ControllerBase
     public async Task<ActionResult<string>> Login([FromBody] MemberLoginDTO user)
     {
         Member? response = await _memberService.Login(user.Username, user.Password);
-
+        
         if (response is not null)
         {
             string token = this._authService.GenerateToken(response);

@@ -27,15 +27,10 @@ public class MemberRepository : IMemberRepository
                                      .FirstOrDefaultAsync(m => m.Id == key);
     }
 
-    public async Task<Member?> GetOneByEmailOrUsernameAsync(string mail, string username)
+    public async Task<Member?> GetOneByEmailOrUsernameAsync(string credential)
     {
         return await _context.Members.Include(m => m.Tournaments)
-                                     .FirstOrDefaultAsync(m => m.Username == username || m.Mail == mail);
-    }
-    
-    public async Task<Member?> GetOneByEmailOrUsernameAsync(string username)
-    {
-        return await this.GetOneByEmailOrUsernameAsync(null, username);
+                                     .FirstOrDefaultAsync(m => m.Username == credential || m.Mail == credential);
     }
 
     public async Task<Member> CreateAsync(Member entity)

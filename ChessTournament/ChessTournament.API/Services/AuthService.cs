@@ -22,6 +22,7 @@ public class AuthService
         {
             new Claim(ClaimTypes.NameIdentifier, member.Id.ToString()),
             new Claim("Username", member.Username),
+            new Claim("Elo", member.Elo.ToString()),
             new Claim(ClaimTypes.Email, member.Mail),
             new Claim(ClaimTypes.Role, member.Role.ToString()),
         };
@@ -36,7 +37,7 @@ public class AuthService
             _configuration["Jwt:Issuer"], // server qui génère l'api
             _configuration["Jwt:Audience"], // qui l'utilise
             claims,
-            expires: DateTime.Now.AddMinutes(60),
+            expires: DateTime.Now.AddDays(60), // A modifier pour faire un token de 15 minutes + un refreshtoken
             signingCredentials: creds
         );
         

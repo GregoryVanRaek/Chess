@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ChessTournament.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b6df0e036d8666f8a8ac755d625d992c9e1e9931")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fb04b98723b3ae0dcf08c745a3ab02e858d2cce0")]
 [assembly: System.Reflection.AssemblyProductAttribute("ChessTournament.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ChessTournament.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
