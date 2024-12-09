@@ -8,6 +8,7 @@ public class TournamentViewDTO
     public int? Id { get; set; }
     public required string Name { get; set; }
     public string? Place { get; set; }
+    public int? RegisteredPLayers { get; set; }
     public required int PlayerMin { get; set; } 
     public required int PlayerMax { get; set; } 
     public int? EloMin { get; set; }

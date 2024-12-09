@@ -62,54 +62,6 @@ public class MemberService : IMemberService
         }
     }
     
-    private async Task CheckUniqueAsync(Member entity)
-    {
-        Member? member = await _memberRepository.GetOneByEmailOrUsernameAsync(entity.Username);
-
-        if (member != null && (member.Mail == entity.Mail || member.Username == entity.Username))
-            throw new AlreadyExistException("Member already exists");
-    }
-
-    public async Task<int> CheckMemberAge(Member entity, DateTime date)
-    {
-        Member member = await _memberRepository.GetOneByIdAsync((int)entity.Id);
-        int age = date.Year - member.Birthday.Year;
-        
-        if (member.Birthday.Date > date.AddYears(-age)) 
-            age--;
-
-        return age;
-    }
-
-    public async IAsyncEnumerable<Member> CheckParticipation(Tournament tournament)
-    {
-        var juniorCategory = tournament.Categories.Any(c => c.Name == CategoryEnum.Junior);
-        var seniorCategory = tournament.Categories.Any(c => c.Name == CategoryEnum.Senior);
-        var veteranCategory = tournament.Categories.Any(c => c.Name == CategoryEnum.Veteran);
-
-        bool IsEligibleForCategory(int age)
-        {
-            return (age < 18 && juniorCategory) ||
-                   (age >= 18 && age < 60 && seniorCategory) ||
-                   (age >= 60 && veteranCategory);
-        }
-        
-        await foreach (var member in GetAllAsync())
-        {
-            if (member.Elo <= tournament.EloMax && member.Elo >= tournament.EloMin &&
-                (!tournament.WomenOnly || member.Gender != Gender.Male))
-            {
-                int age = await CheckMemberAge(member, tournament.RegistrationEndDate);
-
-                if (IsEligibleForCategory(age))
-                {
-                    Console.WriteLine(member);
-                    yield return member;
-                }
-            }
-        }
-    }
-    
     public async Task<Member> Login(string username, string password)
     {
         Member? member = await _memberRepository.GetOneByEmailOrUsernameAsync(username);
@@ -119,5 +71,86 @@ public class MemberService : IMemberService
         
         return null;
     }
+
+    #region Private methods
+
+    private async Task CheckUniqueAsync(Member entity)
+    {
+        Member? member = await _memberRepository.GetOneByEmailOrUsernameAsync(entity.Username);
+
+        if (member != null && (member.Mail == entity.Mail || member.Username == entity.Username))
+            throw new AlreadyExistException("Member already exists");
+    }
+    
+    public async IAsyncEnumerable<Member> CheckParticipation(Tournament tournament)
+    {
+        if (CheckTournamentValidity(tournament))
+        {
+            await foreach (Member member in GetAllAsync())
+            {
+                if (!tournament.Members.Contains(member))
+                {
+                    int age = CheckMemberAge(member, tournament);
+    
+                    if (CheckCategory(age, tournament) 
+                        && CheckElo(member.Elo, tournament)
+                        && CheckGender(member.Gender, tournament))
+                    {
+                        Console.WriteLine(member);
+                        yield return member;
+                    }
+                }
+            }
+        }
+        
+        
+    }
+    
+    private bool CheckTournamentValidity(Tournament tournament)
+        {
+            return    tournament.State == TournamentState.WaitingForPlayer
+                   && tournament.RegistrationEndDate.Date > DateTime.Now.Date
+                   && tournament.Members.Count < tournament.PlayerMax;
+        }
+
+    private bool CheckCategory(int age, Tournament tournament)
+    {
+        var juniorCategory = tournament.Categories.Any(c => c.Name == CategoryEnum.Junior);
+        var seniorCategory = tournament.Categories.Any(c => c.Name == CategoryEnum.Senior);
+        var veteranCategory = tournament.Categories.Any(c => c.Name == CategoryEnum.Veteran);
+        
+        return (age < 18 && juniorCategory) ||
+               (age >= 18 && age < 60 && seniorCategory) ||
+               (age >= 60 && veteranCategory);
+        
+    }
+
+    private int CheckMemberAge(Member member, Tournament tournament)
+    {
+        DateTime date = tournament.RegistrationEndDate;
+        int age = date.Year - member.Birthday.Year;
+    
+        if (member.Birthday.Date > date.AddYears(-age)) 
+            age--;
+
+        return age;
+    }
+
+    private bool CheckElo(int? memberElo, Tournament tournament)
+    {
+        return memberElo >= tournament.EloMin && memberElo <= tournament.EloMax;
+    }
+
+    private bool CheckGender(Gender gender, Tournament tournament)
+    {
+        return (tournament.WomenOnly && (gender == Gender.Female || gender == Gender.Other)
+                || !tournament.WomenOnly && gender == Gender.Male);
+    }
+    
+    
+    #endregion
+    
+
+    
     
 }

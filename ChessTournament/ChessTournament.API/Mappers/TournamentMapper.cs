@@ -16,6 +16,7 @@ public static class TournamentMapper
             Place = tournament.Place,
             PlayerMin = tournament.PlayerMin,
             PlayerMax = tournament.PlayerMax,
+            RegisteredPLayers = tournament.Members.Count,
             EloMin = tournament.EloMin,
             EloMax = tournament.EloMax,
             State = tournament.State,
