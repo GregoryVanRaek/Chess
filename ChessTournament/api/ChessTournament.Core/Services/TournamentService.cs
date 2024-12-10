@@ -200,7 +200,7 @@ public class TournamentService :ITournamentService
                 Member player1 = players[i];
                 Member player2 = players[numberOfPlayers - 1 - i];
                 
-                // On ne génère pas de match s'il y a le joueur pause dans le lot
+                // Je ne génère pas de match s'il y a le joueur pause dans le lot
                 if (player1.Username == "Pause" || player2.Username == "Pause")
                     continue;
                 
