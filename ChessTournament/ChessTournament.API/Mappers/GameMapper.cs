@@ -9,8 +9,10 @@ public static class GameMapper
     {
         return new GameViewDTO
         {
+            Id = game.Id,
             RoundNumber = game.RoundNumber,
-            Players = game.GameMembers.Select(gm => gm.ToDTO()).ToList()
+            Players = game.GameMembers.Select(gm => gm.ToDTO()).ToList(),
+            Result = game.Result
         };
     }
 

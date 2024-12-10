@@ -60,9 +60,17 @@ public class TournamentRepository :ITournamentRepository
         return insert;
     }
 
-    public Task<Tournament> UpdateAsync(Tournament entity)
+    public async Task<Tournament> UpdateAsync(Tournament entity)
     {
-        throw new NotImplementedException();
+        Tournament? entityToUpdate = await this.GetOneByIdAsync((int)entity.Id);
+
+        if (entityToUpdate == null)
+            throw new NotFoundexception("Tournament not found");
+
+        _context.Entry(entityToUpdate).CurrentValues.SetValues(entity);
+        await _context.SaveChangesAsync();
+
+        return entityToUpdate;
     }
 
     public async Task<bool> DeleteAsync(Tournament entity)
@@ -128,5 +136,15 @@ public class TournamentRepository :ITournamentRepository
 
         return t;
     }
-    
+
+    public async Task<Tournament> UpdateGameResult(Game gameToUpdate)
+    {
+        Tournament? t = await this.GetOneByIdAsync((int)gameToUpdate.TournamentId);
+        Game g = t.Games.FirstOrDefault(g => g.Id == gameToUpdate.Id);
+
+        g.Result = gameToUpdate.Result;
+        _context.SaveChanges();
+
+        return t;
+    }
 }

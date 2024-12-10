@@ -11,4 +11,7 @@ public interface ITournamentService : IService<int, Tournament>
     Task<int> AddPlayer(Tournament tournament, Member member);
     Task<int> RemovePlayer(Tournament tournament, Member member);
     Task<Tournament> StartTournament(Tournament toStart);
+    Task<Tournament> UpdateResult(Game gameToUpdate);
+    Task<Tournament> UpdateAsync(Tournament entity);
+    Task<IEnumerable<Game>> GetScore(Tournament t);
 }

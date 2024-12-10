@@ -89,9 +89,22 @@ public class TournamentService :ITournamentService
 
     public Task<Tournament> UpdateAsync(Tournament entity)
     {
-        throw new NotImplementedException();
-    }
+        try
+        {
+            if (AllGamePlayed(entity))
+            {
+                entity.ActualRound++;
+                return this._tournamentRepository.UpdateAsync(entity);
+            }
 
+            throw new Exception("Not all game of this round has been played");
+        }
+        catch (Exception e)
+        {
+            throw new DBException("Error while update the tournament");
+        }
+    }
+    
     public async Task<bool> DeleteAsync(Tournament entity)
     {
         Tournament toDelete = await GetOneByIdAsync((int)entity.Id);
@@ -153,15 +166,43 @@ public class TournamentService :ITournamentService
             throw new DBException("An error occured while starting the tournament");
         }
     }
+
+    public async Task<Tournament> UpdateResult(Game gameToUpdate)
+    {
+        try
+        {
+            return await this._tournamentRepository.UpdateGameResult(gameToUpdate);
+        }
+        catch (Exception e)
+        {
+            throw new DBException("An error occured while updating the game result");
+        }
+    }
+
+    public async Task<IEnumerable<Game>> GetScore(Tournament t)
+    {
+        List<PlayerScore> playerScore = new List<PlayerScore>();
+        
+        try
+        {
+            return null;
+        }
+        catch (Exception e)
+        {
+            throw new DBException("error while getting the score");
+        }
+    }
     
     private List<Game> GenerateGames(Tournament tournament)
     {
         List<Game> games = new List<Game>();
+        List<Game> games2 = new List<Game>();
+        
         int numberOfPlayers = tournament.Members.Count;
 
         List<Member> players = tournament.Members;
         
-        int numberOfRounds = numberOfPlayers - 1; 
+        int numberOfRounds = numberOfPlayers - 1;
 
         for (int round = 0; round < numberOfRounds; round++)
         {
@@ -172,7 +213,6 @@ public class TournamentService :ITournamentService
                 
                 Game game = new Game
                 {
-                    RoundNumber = 1,
                     Result = GameEnum.Unplayed,
                     Tournament = tournament,
                     GameMembers = new List<GameMember>
@@ -189,9 +229,31 @@ public class TournamentService :ITournamentService
                         }
                     }
                 };
+                
+                Game game2 = new Game
+                {
+                    Result = GameEnum.Unplayed,
+                    Tournament = tournament,
+                    GameMembers = new List<GameMember>
+                    {
+                        new GameMember
+                        {
+                            Member = player2,
+                            Color = (round % 2 == 0) ? ColorEnum.White : ColorEnum.Black 
+                        },
+                        new GameMember
+                        {
+                            Member = player1,
+                            Color = (round % 2 == 0) ? ColorEnum.Black : ColorEnum.White
+                        }
+                    }
+                };
+                
                 games.Add(game);
+                games2.Add(game2);
             }
-
+            
+            // Après chaque tour chaque joueur bouge de 1 sauf le 1 qui reste fixe
             Member lastPlayer = players[numberOfPlayers - 1];
             for (int i = numberOfPlayers - 1; i > 1; i--)
             {
@@ -199,7 +261,39 @@ public class TournamentService :ITournamentService
             }
             players[1] = lastPlayer;
         }
+        
+        games.AddRange(games2);
 
+        int actualRound = 1;
+
+        for (int i = 0; i < games.Count ; i+=2)
+        {
+            games[i].RoundNumber = actualRound;
+            games[i+1].RoundNumber = actualRound;
+            actualRound++;
+        }
+        
         return games;
     }
+    
+    private bool AllGamePlayed(Tournament entity)
+    {
+        bool gamePlayed = true;
+        var games = entity.Games.Where(g => g.RoundNumber == entity.ActualRound);
+        
+        foreach(Game game in games)
+        {
+            if (game.Result == GameEnum.Unplayed)
+            {
+                gamePlayed = false;
+                break;
+            }
+        }
+
+        return gamePlayed;
+    }
+    
+    
+    
+    
 }

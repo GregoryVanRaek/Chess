@@ -10,4 +10,5 @@ public interface ITournamentRepository :IRepository<int, Tournament>
     Task<int> AddPlayers(Tournament tournament, Member member);
     Task<int> RemovePlayers(Tournament tournament, Member member);
     Task<Tournament> StartTournament(Tournament entity);
+    Task<Tournament> UpdateGameResult(Game gameToUpdate);
 }

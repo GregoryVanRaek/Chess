@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using ChessTournament.API.DTO.Game;
 using ChessTournament.API.DTO.Member;
 using ChessTournament.API.DTO.Tournament;
 using ChessTournament.API.Mappers;
@@ -209,7 +210,7 @@ public class TournamentsController : ControllerBase
 
             await this._tournamentService.AddPlayer(tournament, member);
 
-            return Ok();
+            return Ok("Player added !");
         }
         catch (Exception e)
         {
@@ -274,6 +275,89 @@ public class TournamentsController : ControllerBase
             await this._tournamentService.StartTournament(tournamentToStart);
 
             return Created();
+        }
+        catch (Exception e)
+        {
+            return BadRequest();
+        }
+    } 
+    
+    [HttpPost("updateresult")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<TournamentViewDTO>> UpdateResult([FromBody] UpdateGameDTO updateGameDTO)
+    {
+        try
+        {
+            Tournament? tournamentToUpdate = await this._tournamentService.GetOneByIdAsync(updateGameDTO.TournamentId);
+            Game? gameToUpdate = tournamentToUpdate.Games.FirstOrDefault(g => g.Id == updateGameDTO.GameId);
+            
+            if (tournamentToUpdate is null)
+                return NotFound("This tournament doesn't exist");
+            
+            if (gameToUpdate is null)
+                return NotFound("This game doesn't exist");
+
+            gameToUpdate.Result = updateGameDTO.Result;
+            
+            if(tournamentToUpdate.ActualRound == gameToUpdate.RoundNumber)
+                await this._tournamentService.UpdateResult(gameToUpdate);
+            else
+            {
+                return BadRequest("You can only change the state of the game corresponding the actual round");
+            }
+
+            return Ok("The state of the game has been changed");
+        }
+        catch (Exception e)
+        {
+            return BadRequest();
+        }
+    } 
+    
+    [HttpPost("nextround/{tournamentId:int}")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<TournamentViewDTO>> NextRound([FromRoute] int tournamentId)
+    {
+        try
+        {
+            Tournament? tournamentToUpdate = await this._tournamentService.GetOneByIdAsync(tournamentId);
+            
+            if (tournamentToUpdate is null)
+                return NotFound("This tournament doesn't exist");
+            
+            await this._tournamentService.UpdateAsync(tournamentToUpdate);
+
+            return Ok("The state of the game has been changed");
+        }
+        catch (Exception e)
+        {
+            return BadRequest("All the game hasn't been played for this round");
+        }
+    } 
+    
+    [HttpPost("score/{tournamentId:int}")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<IEnumerable<PlayerScoreView>>> GetScore([FromRoute] int tournamentId)
+    {
+        try
+        {
+            Tournament? tournament = await this._tournamentService.GetOneByIdAsync(tournamentId);
+            
+            if (tournament is null)
+                return NotFound("This tournament doesn't exist");
+            
+            
+            return Ok();
+
         }
         catch (Exception e)
         {
