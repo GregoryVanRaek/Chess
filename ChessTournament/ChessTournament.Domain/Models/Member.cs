@@ -16,5 +16,4 @@ public class Member
     public List<Tournament> Tournaments { get; set; } = new List<Tournament>();
     
     public List<GameMember> GameMembers { get; set; } = new List<GameMember>();
-
 }

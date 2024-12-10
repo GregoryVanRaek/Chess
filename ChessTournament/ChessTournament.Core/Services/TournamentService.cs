@@ -178,20 +178,6 @@ public class TournamentService :ITournamentService
             throw new DBException("An error occured while updating the game result");
         }
     }
-
-    public async Task<IEnumerable<Game>> GetScore(Tournament t)
-    {
-        List<PlayerScore> playerScore = new List<PlayerScore>();
-        
-        try
-        {
-            return null;
-        }
-        catch (Exception e)
-        {
-            throw new DBException("error while getting the score");
-        }
-    }
     
     private List<Game> GenerateGames(Tournament tournament)
     {
@@ -293,7 +279,64 @@ public class TournamentService :ITournamentService
         return gamePlayed;
     }
     
-    
-    
+    public async Task<List<PlayerScore>> GetScore(Tournament tournament)
+    {
+        List<PlayerScore> playerStatsList = new List<PlayerScore>();
+        
+        foreach (Member member in tournament.Members)
+        {
+            playerStatsList.Add(new PlayerScore
+            {
+                Username = member.Username,
+                GamesPlayed = 0,
+                Wins = 0,
+                Losses = 0,
+                Ties = 0,
+                Score = 0
+            });
+        }
+
+        foreach (Game game in tournament.Games)
+        {
+            Member? player1 = game.GameMembers.FirstOrDefault(gm => gm.Color == ColorEnum.White)?.Member;
+            Member? player2 = game.GameMembers.FirstOrDefault(gm => gm.Color == ColorEnum.Black)?.Member;
+
+            if (player1 != null && player2 != null)
+            {
+                PlayerScore player1Stats = playerStatsList.First(ps => ps.Username == player1.Username);
+                PlayerScore player2Stats = playerStatsList.First(ps => ps.Username == player2.Username);
+
+                // calcul des matchs joués
+                if (game.Result != GameEnum.Unplayed)
+                {
+                    player1Stats.GamesPlayed++;
+                    player2Stats.GamesPlayed++;
+                }
+
+                // calcul des résultats
+                if (game.Result == GameEnum.White) 
+                {
+                    player1Stats.Wins++;
+                    player1Stats.Score += 1;
+                    player2Stats.Losses++;
+                }
+                else if (game.Result == GameEnum.Black)
+                {
+                    player2Stats.Wins++;
+                    player2Stats.Score += 1;
+                    player1Stats.Losses++;
+                }
+                else if (game.Result == GameEnum.Tie) 
+                {
+                    player1Stats.Ties++;
+                    player2Stats.Ties++;
+                    player1Stats.Score += 0.5;
+                    player2Stats.Score += 0.5;
+                }
+            }
+        }
+        
+        return playerStatsList.OrderByDescending(ps => ps.Score).ToList();
+    }
     
 }

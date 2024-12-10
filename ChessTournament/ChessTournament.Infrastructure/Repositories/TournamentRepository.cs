@@ -144,7 +144,7 @@ public class TournamentRepository :ITournamentRepository
 
         g.Result = gameToUpdate.Result;
         _context.SaveChanges();
-
+        
         return t;
     }
 }

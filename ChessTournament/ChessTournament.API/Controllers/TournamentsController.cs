@@ -354,9 +354,10 @@ public class TournamentsController : ControllerBase
             
             if (tournament is null)
                 return NotFound("This tournament doesn't exist");
+
+            var playerscore = await this._tournamentService.GetScore(tournament);
             
-            
-            return Ok();
+            return Ok(playerscore);
 
         }
         catch (Exception e)

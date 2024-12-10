@@ -1,4 +1,5 @@
 ﻿using ChessTournament.API.DTO.Game;
+using ChessTournament.API.DTO.Tournament;
 using ChessTournament.Domain.Models;
 
 namespace ChessTournament.API.Mappers;
@@ -29,4 +30,18 @@ public static class GameMapper
     {
         return games.Select(g => g.ToDTO()).ToList();
     }
+
+    public static PlayerScoreView ToPlayerScoreView(this PlayerScore playerscore)
+    {
+        return new PlayerScoreView()
+        {
+            Username = playerscore.Username,
+            GamesPlayed = playerscore.GamesPlayed,
+            Wins = playerscore.Wins,
+            Losses = playerscore.Losses,
+            Ties = playerscore.Ties,
+            Score = playerscore.Score
+        };
+    }
+    
 }

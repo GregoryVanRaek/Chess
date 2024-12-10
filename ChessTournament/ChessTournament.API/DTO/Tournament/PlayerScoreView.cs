@@ -4,8 +4,8 @@ public class PlayerScoreView
 {
     public string Username { get; set;}
     public int GamesPlayed { get; set; }
-    public int Victory { get; set; }
-    public int Defeat { get; set; }
-    public int Tie { get; set; }
-    public float Score { get; set; }
+    public int Wins { get; set; }
+    public int Losses { get; set; }
+    public int Ties { get; set; }
+    public double Score { get; set; }
 }
