@@ -9,6 +9,7 @@ using ChessTournament.Domain.Const;
 using ChessTournament.Domain.Enum;
 using ChessTournament.Domain.Exception;
 using ChessTournament.Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChessTournament.API.Controllers;
@@ -117,8 +118,11 @@ public class TournamentsController : ControllerBase
     }
     
     [HttpPost("NewTournament")]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<TournamentViewDTO>> Create([FromBody] TournamentFormDTO tournamentDto)
     {
@@ -132,6 +136,9 @@ public class TournamentsController : ControllerBase
         if (tournamentDto.EloMin < TournamentConst.MIN_ELO || tournamentDto.EloMin > TournamentConst.MAX_ELO 
            || tournamentDto.EloMax <  TournamentConst.MIN_ELO || tournamentDto.EloMax > TournamentConst.MAX_ELO )
             return BadRequest($"Min and max Elo must be between {TournamentConst.MIN_ELO } and {TournamentConst.MAX_ELO }");
+
+        if (!User.IsInRole(Role.Admin.ToString()))
+            return Forbid("You can't do that");
         
         try
         {
@@ -159,9 +166,11 @@ public class TournamentsController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Delete([FromRoute] int id)
     {
         try
@@ -171,6 +180,9 @@ public class TournamentsController : ControllerBase
             if(toDelete is null)
                 return NotFound("This tournament doesn't exist");
 
+            if (!User.IsInRole(Role.Admin.ToString()))
+                return Forbid("You can't do that");
+            
             if (toDelete.Members.Count > 0)
             {
                 foreach (Member m in toDelete.Members)
@@ -192,8 +204,10 @@ public class TournamentsController : ControllerBase
     }
 
     [HttpPost("addplayer")]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<TournamentViewDTO>> AddPlayer([FromBody] AddPlayerDTO playerTournamentDTO)
     {
@@ -219,8 +233,10 @@ public class TournamentsController : ControllerBase
     }
     
     [HttpPost("removeplayer")]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<TournamentViewDTO>> RemovePlayer([FromBody] AddPlayerDTO playerTournamentDTO)
     {
@@ -253,8 +269,10 @@ public class TournamentsController : ControllerBase
     }
 
     [HttpPost("start/{tournamentId:int}")]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<TournamentViewDTO>> StartTournament([FromRoute] int tournamentId)
@@ -272,6 +290,9 @@ public class TournamentsController : ControllerBase
             if (tournamentToStart.RegistrationEndDate > DateTime.Today)
                 return BadRequest("Impossible to start the tournament. The period of registration is still open");
 
+            if(!User.IsInRole(Role.Admin.ToString()))
+                return Forbid("you can\"t do that");
+                
             await this._tournamentService.StartTournament(tournamentToStart);
 
             return Created();
@@ -283,6 +304,7 @@ public class TournamentsController : ControllerBase
     } 
     
     [HttpPost("updateresult")]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -300,6 +322,9 @@ public class TournamentsController : ControllerBase
             if (gameToUpdate is null)
                 return NotFound("This game doesn't exist");
 
+            if(!User.IsInRole(Role.Admin.ToString()))
+                return Forbid("you can\"t do that");
+            
             gameToUpdate.Result = updateGameDTO.Result;
             
             if(tournamentToUpdate.ActualRound == gameToUpdate.RoundNumber)
@@ -318,6 +343,7 @@ public class TournamentsController : ControllerBase
     } 
     
     [HttpPost("nextround/{tournamentId:int}")]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -330,6 +356,9 @@ public class TournamentsController : ControllerBase
             
             if (tournamentToUpdate is null)
                 return NotFound("This tournament doesn't exist");
+            
+            if(!User.IsInRole(Role.Admin.ToString()))
+                return Forbid("you can\"t do that");
             
             await this._tournamentService.UpdateAsync(tournamentToUpdate);
 
@@ -365,5 +394,4 @@ public class TournamentsController : ControllerBase
             return BadRequest();
         }
     } 
-    
 }

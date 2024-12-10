@@ -24,18 +24,5 @@ public class GameMemberConfig : IEntityTypeConfiguration<GameMember>
         builder.HasOne(gm => gm.Game)
             .WithMany(g => g.GameMembers)
             .HasForeignKey(gm => gm.GameId);
-
-        builder.HasData(new Member
-        {
-            Username = "Checkmate",
-            Mail = "checkmate@chesstournament.com",
-            Password =
-                "$argon2id$v=19$m=65536,t=3,p=1$PNbprKT2GkhZC3XDv1cIkg$yF4B0x/45Wu887sTldoZEQYuRnmxWOp1YSx42KZNjrQ",
-            Birthday = new DateTime(1993, 02, 14),
-            Gender = Gender.Male,
-            Elo = 3000,
-            Role = Role.Admin
-        });
-
     }
 }

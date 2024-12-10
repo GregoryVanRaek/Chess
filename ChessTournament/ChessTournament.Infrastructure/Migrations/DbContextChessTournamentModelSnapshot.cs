@@ -146,6 +146,19 @@ namespace ChessTournament.Infrastructure.Migrations
                         {
                             t.HasCheckConstraint("CK_ELO", "ELO BETWEEN 0 AND 3000");
                         });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Birthday = new DateTime(1993, 2, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Elo = 3000,
+                            Gender = "Male",
+                            Mail = "checkmate@chesstournament.com",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$PNbprKT2GkhZC3XDv1cIkg$yF4B0x/45Wu887sTldoZEQYuRnmxWOp1YSx42KZNjrQ",
+                            Role = "Admin",
+                            Username = "Checkmate"
+                        });
                 });
 
             modelBuilder.Entity("ChessTournament.Domain.Models.Tournament", b =>

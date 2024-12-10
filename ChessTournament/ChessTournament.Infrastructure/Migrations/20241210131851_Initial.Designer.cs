@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChessTournament.Infrastructure.Migrations
 {
     [DbContext(typeof(DbContextChessTournament))]
-    [Migration("20241209131542_Initial")]
+    [Migration("20241210131851_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -148,6 +148,19 @@ namespace ChessTournament.Infrastructure.Migrations
                     b.ToTable("Member", null, t =>
                         {
                             t.HasCheckConstraint("CK_ELO", "ELO BETWEEN 0 AND 3000");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Birthday = new DateTime(1993, 2, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Elo = 3000,
+                            Gender = "Male",
+                            Mail = "checkmate@chesstournament.com",
+                            Password = "$argon2id$v=19$m=65536,t=3,p=1$PNbprKT2GkhZC3XDv1cIkg$yF4B0x/45Wu887sTldoZEQYuRnmxWOp1YSx42KZNjrQ",
+                            Role = "Admin",
+                            Username = "Checkmate"
                         });
                 });
 

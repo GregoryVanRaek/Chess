@@ -177,6 +177,11 @@ namespace ChessTournament.Infrastructure.Migrations
                     { 3, "Senior" }
                 });
 
+            migrationBuilder.InsertData(
+                table: "Member",
+                columns: new[] { "Id", "Birthday", "Elo", "Gender", "Mail", "Password", "Role", "Username" },
+                values: new object[] { 1, new DateTime(1993, 2, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), 3000, "Male", "checkmate@chesstournament.com", "$argon2id$v=19$m=65536,t=3,p=1$PNbprKT2GkhZC3XDv1cIkg$yF4B0x/45Wu887sTldoZEQYuRnmxWOp1YSx42KZNjrQ", "Admin", "Checkmate" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Game_TournamentId",
                 table: "Game",
