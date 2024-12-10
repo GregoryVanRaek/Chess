@@ -188,6 +188,9 @@ public class TournamentService :ITournamentService
 
         List<Member> players = tournament.Members;
         
+        if (players.Count % 2 != 0)
+            players.Add(new Member { Username = "Pause", Mail = null, Password = null, Birthday = DateTime.Now, Gender = Gender.Other});
+        
         int numberOfRounds = numberOfPlayers - 1;
 
         for (int round = 0; round < numberOfRounds; round++)
@@ -196,6 +199,10 @@ public class TournamentService :ITournamentService
             {
                 Member player1 = players[i];
                 Member player2 = players[numberOfPlayers - 1 - i];
+                
+                // On ne génère pas de match s'il y a le joueur pause dans le lot
+                if (player1.Username == "Pause" || player2.Username == "Pause")
+                    continue;
                 
                 Game game = new Game
                 {
