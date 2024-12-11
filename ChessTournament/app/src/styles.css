@@ -1,3 +1,121 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root{
+  --background-color:#f7f7f7;
+  --background-color-heavy:#ededed;
+
+  --primary-color:#363636;
+  --secondary-color:#dfdfdf;
+
+  --text-primary-color:#dfdfdf;
+  --text-secondary-color:#363636;
+
+  --cancel-color:#7F1D1D;
+  --success-color:#134E4A;
+  --disabled-color:#bae2fd;
+
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  color:var(--primary-color);
+  background-color: var(--background-color);
+}
+
+.btn {
+  background: transparent;
+  color: var(--primary-color);
+  padding: 0.7rem 1.4rem;
+  border-radius: 10px;
+  border: 2px solid var(--primary-color);
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  display: inline-block;
+
+  &:hover {
+    background-color: var(--primary-color);
+    color: var(--text-primary-color);
+  }
+
+  &:focus{
+    outline: none;
+    border-width: 3px;
+  }
+}
+
+.btn-danger {
+  color: var(--cancel-color);
+  border-color:var(--cancel-color);
+
+  &:hover {
+    background-color: var(--cancel-color);
+    color: var(--text-primary-color);
+  }
+}
+
+.btn-success {
+  color: var(--success-color);
+  border-color:var(--success-color);
+
+  &:hover {
+    background-color: var(--success-color);
+    color: var(--text-primary-color);
+  }
+}
+
+.btn-disabled{
+  opacity: 0.3;
+  &:hover {
+    background-color: var(--secondary-color);
+    color: var(--success-color);
+    border-color:var(--success-color);
+    cursor: not-allowed;
+  }
+}
+
+h1{
+  @apply text-2xl my-8 font-bold uppercase
+}
+
+h2{
+  @apply text-xl font-semibold mx-2
+}
+
+.page-wrapper-primary {
+  background-color: var(--secondary-color);
+  border-bottom: 1px solid var(--primary-color);
+}
+
+.container{
+  @apply p-4 rounded-s w-2/4;
+  border-color:var(--primary-color);
+  border-width: 1px;
+}
+
+input[type="text"], input[type="password"], input[type="email"] {
+  @apply mt-2 p-2 w-full rounded-xl;
+  border-width: 3px;
+  border-color: var(--secondary-color);
+  background-color: var(--secondary-color);
+
+  &:focus {
+    border-color: var(--primary-color);
+    border-width: 3px;
+    outline: none;
+    transition: border-color 0.8s ease, color 0.8s ease;
+  }
+}
+
+.card {
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  background-color: var(--background-color-heavy);
+  z-index: 0;
+}
+
+.medium{
+  width:600px;
+  height:350px;
+}

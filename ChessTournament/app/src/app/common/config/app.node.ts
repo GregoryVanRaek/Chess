@@ -1,3 +1,8 @@
 export enum AppNode{
-  HOME = "home"
+  HOME = "home",
+  TOURNAMENT = "tournament",
+  OPENTOURNAMENT = "open-tournament",
+  OPENTOURNAMENTDETAIL = "detail",
+  SIGNIN="signin",
+  SECURITY="account",
 }
