@@ -26,7 +26,8 @@
     "paths": {
       "@shared/*": ["./src/app/shared/*"],
       "@api": ["./app/shared/api/index.ts"],
-      "@common": ["./src/app/common/index.ts"]
+      "@common": ["./src/app/common/index.ts"],
+      "@environment": ["./src/environment"]
     }
   },
   "angularCompilerOptions": {

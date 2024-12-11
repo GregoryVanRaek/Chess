@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import {AppNode} from '@common';
+import {securityGuard} from '../feature/security/guard';
 
 export const routes: Routes = [
   {
@@ -13,6 +14,7 @@ export const routes: Routes = [
   },
   {
     path:AppNode.TOURNAMENT,
+    canActivate:[securityGuard],
     loadChildren: () => import('../feature/tournament').then(r => r.tournamentRoutes)
   },
   {

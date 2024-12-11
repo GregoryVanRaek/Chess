@@ -1,6 +1,6 @@
 import {effect, EffectRef, Injectable, signal, WritableSignal} from '@angular/core';
 import {Token} from '@shared/api';
-import {environment} from '../../../../environment';
+import {environment} from '@environment';
 import {isNil} from 'lodash';
 
 @Injectable({
@@ -12,12 +12,14 @@ export class TokenService {
 
   private getToken() :Token {
     const token :string | null = localStorage.getItem(environment.TOKEN_KEY);
+
     return !isNil(token) ? JSON.parse(token) as Token : this.getEmpty();
   }
 
   public getEmpty() :Token {
     return {
-      token : ''
+      token : '',
+      isEmpty: true
     }
   }
 

@@ -1,17 +1,17 @@
 <div class="flex justify-center items-center">
-    <form class="card medium">
+    <form class="card medium" [formGroup]="form">
       <div class="mt-4">
         <label for="username">Username</label>
-        <input type="text" id="username" name="username">
+        <input type="text" id="username" formControlName="username" placeholder="username">
       </div>
 
       <div class="mt-4 mb-4">
         <label for="password">Password</label>
-        <input type="password" id="password" name="password">
+        <input type="password" id="password" formControlName="password" placeholder="password">
       </div>
 
       <div class="flex gap-2 justify-end">
-        <button class="btn btn-success" type="submit">Login</button>
+        <button class="btn btn-success" type="button" (click)="signIn()">Login</button>
         <a class="btn btn-danger" routerLink="/home">Cancel</a>
       </div>
     </form>

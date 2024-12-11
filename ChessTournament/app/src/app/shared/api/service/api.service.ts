@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {environment} from '../../../../environment';
+import {environment} from '@environment';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
@@ -15,7 +15,7 @@ export class ApiService {
   }
 
   post(partURL: string, payload: any): Observable<any> {
-    return this.http.post(`${this.baseURL}${partURL}`, payload);
+    return this.http.post(`${this.baseURL}${partURL}`, payload, { responseType: 'text' });
   }
 
 }

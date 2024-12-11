@@ -3,6 +3,10 @@ export enum AppNode{
   TOURNAMENT = "tournament",
   OPENTOURNAMENT = "open-tournament",
   OPENTOURNAMENTDETAIL = "detail",
-  SIGNIN="signin",
-  SECURITY="account",
+  SECURITY="members",
+  LOGIN="login",
+  SIGNUP="signup",
+  REDIRECT_TO_PUBLIC=HOME,
+  REDIRECT_TO_AUTHENTICATED=TOURNAMENT,
+  REGISTER="register",
 }

@@ -11,11 +11,11 @@ export const securityRoutes: Routes = [
     children:[
       {
         path:"",
-        redirectTo:AppNode.SIGNIN,
+        redirectTo:AppNode.LOGIN,
         pathMatch:'full'
       },
       {
-        path:AppNode.SIGNIN,
+        path:AppNode.LOGIN,
         loadComponent:() => import('./page').then(r => r.SigninPageComponent)
       }
     ]
