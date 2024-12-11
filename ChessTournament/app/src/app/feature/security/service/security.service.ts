@@ -1,4 +1,4 @@
-import {computed, inject, Injectable, Signal} from '@angular/core';
+import {computed, effect, EffectRef, inject, Injectable, Signal} from '@angular/core';
 import {ApiService, SignInPayload, TokenService} from '@shared/api';
 import {Observable, tap} from 'rxjs';
 import {AppNode} from '@common';
@@ -9,7 +9,9 @@ import {AppNode} from '@common';
 })
 export class SecurityService {
   public isAuthenticated$ : Signal<boolean> = computed(() => this.tokenService.token$().isEmpty) ;
+  private isAuthenticatedHandler :EffectRef = effect( () => this.handleAuthenticatedChange(this.isAuthenticated$()));
   private readonly apiService :ApiService = inject(ApiService);
+  private router :Router = inject(Router);
 
   constructor(public tokenService :TokenService) {
   }
@@ -29,5 +31,27 @@ export class SecurityService {
       })
     );
   }
+
+  private handleAuthenticatedChange(isAuthenticated :boolean):void{
+    if(isAuthenticated){
+      console.log("is authenticated", isAuthenticated, this.tokenService.token$());
+      this.apiService.get(ApiURI.ME).pipe(
+        tap((response :ApiResponse) => {
+          if(response.result){
+            this.account$.set(CredentialUtils.fromDto(response.data));
+
+            if(!window.location.pathname.startsWith(`/${AppNode.REDIRECT_TO_AUTHENTICATED}`)){
+              this.router.navigate([AppNode.REDIRECT_TO_AUTHENTICATED]).then();
+            }
+
+            return;
+          }
+          this.router.navigate([AppRoutes.PUBLIC]).then();
+        })).subscribe();
+      return;
+    }
+    this.router.navigate([AppRoutes.PUBLIC]).then();
+  }
+
 
 }
