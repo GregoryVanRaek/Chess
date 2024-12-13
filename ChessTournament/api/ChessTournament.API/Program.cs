@@ -92,6 +92,23 @@ builder.Services.AddAuthorization(options =>
 });
 
 
+builder.Services.AddCors(service => 
+{
+    service.AddPolicy("FFA", policy =>
+    {
+        policy.AllowAnyMethod();
+        policy.AllowAnyHeader();
+        policy.AllowAnyOrigin();
+    });
+    service.AddPolicy("Dev", policy =>
+    {
+        policy.AllowAnyMethod();
+        policy.WithHeaders(("Example"));
+        policy.WithOrigins("http://localhost:4200");
+    });
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -102,6 +119,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("FFA");
 
 app.UseAuthentication();
 app.UseAuthorization();

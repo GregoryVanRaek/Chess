@@ -5,6 +5,7 @@ import {Router} from '@angular/router';
 import {inject} from '@angular/core';
 import {TokenService} from '@shared/api';
 import { EMPTY, Observable} from 'rxjs';
+import {isNil} from 'lodash';
 
 
 const baseURL: string = environment.apiURL;
@@ -22,8 +23,8 @@ export const httpInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: 
   const tokenService = inject(TokenService);
   const router: Router = inject(Router);
 
-  if (!tokenService.token$().isEmpty) {
-    return next(setTokenInHeader(req, tokenService.token$().token));
+  if (!isNil(tokenService.token$())) {
+    return next(setTokenInHeader(req, tokenService.token$()));
   }
 
   return redirectToPublic(router);

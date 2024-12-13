@@ -28,13 +28,12 @@ export class SigninPageComponent implements OnInit {
 
   public signIn():void{
     const payload = this.form.value;
-    console.log(payload)
     if(this.form.valid){
       this.securityService.signIn(payload).subscribe({
         next: (response) => {
-          if(response.result) {
+          if(response) {
             setTimeout(() => {
-              this.router.navigate(['/dashboard']);
+              this.router.navigate(['/tournament']);
             }, 1000);
           }
         },

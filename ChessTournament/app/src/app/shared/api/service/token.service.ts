@@ -1,5 +1,4 @@
 import {effect, EffectRef, Injectable, signal, WritableSignal} from '@angular/core';
-import {Token} from '@shared/api';
 import {environment} from '@environment';
 import {isNil} from 'lodash';
 
@@ -7,34 +6,27 @@ import {isNil} from 'lodash';
   providedIn: 'root'
 })
 export class TokenService {
-  public token$ :WritableSignal<Token> = signal(this.getToken()) ; // signal lancé lors de l'injection du service
+  public token$ :WritableSignal<string> = signal(this.getToken()) ; // signal lancé lors de l'injection du service
   private readonly tokenHandler :EffectRef = effect(() => this.handleTokenChange(this.token$())); // réagir en fonction de la donnée dans le token
 
-  private getToken() :Token {
+  private getToken() :string {
     const token :string | null = localStorage.getItem(environment.TOKEN_KEY);
 
-    return !isNil(token) ? JSON.parse(token) as Token : this.getEmpty();
+    return !isNil(token) ? token : "";
   }
 
-  public getEmpty() :Token {
-    return {
-      token : '',
-      isEmpty: true
-    }
-  }
-
-  public setToken(token :Token) :void{
-    if (!isNil(token.token)) {
+  public setToken(token :string) :void{
+    if (!isNil(token)) {
       this.token$.set(token);
     } else {
-      this.token$.set(this.getEmpty());
+      this.token$.set("");
       localStorage.removeItem(environment.TOKEN_KEY);
     }
   }
 
-  private handleTokenChange(token:Token):void{
-    if(isNil(token.token))
-      localStorage.setItem(environment.TOKEN_KEY, JSON.stringify(token.token));
+  private handleTokenChange(token:string):void{
+    if(token)
+      localStorage.setItem(environment.TOKEN_KEY, token);
     else
       localStorage.removeItem(environment.TOKEN_KEY);
   }

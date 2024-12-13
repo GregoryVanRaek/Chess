@@ -29,7 +29,7 @@ public class TournamentsController : ControllerBase
         this._memberService = memberService;
     }
 
-    [HttpGet("AllTournaments")]
+    [HttpGet("allTournaments")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -117,7 +117,7 @@ public class TournamentsController : ControllerBase
         }
     }
     
-    [HttpPost("NewTournament")]
+    [HttpPost("newTournament")]
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -384,7 +384,7 @@ public class TournamentsController : ControllerBase
             if (tournament is null)
                 return NotFound("This tournament doesn't exist");
 
-            var playerscore = await this._tournamentService.GetScore(tournament);
+            List<PlayerScore> playerscore = await this._tournamentService.GetScore(tournament);
             
             return Ok(playerscore);
 

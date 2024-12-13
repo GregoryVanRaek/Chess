@@ -26,7 +26,7 @@ public class MembersController : ControllerBase
         this._authService = authService;
     }
     
-    [HttpGet("All")]
+    [HttpGet("all")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
