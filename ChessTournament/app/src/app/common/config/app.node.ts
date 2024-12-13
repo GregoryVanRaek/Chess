@@ -9,4 +9,7 @@ export enum AppNode{
   REDIRECT_TO_PUBLIC=HOME,
   REDIRECT_TO_AUTHENTICATED=TOURNAMENT,
   REGISTER="register",
+  DASHBOARD='dashboard',
+  MEMBER="member",
+  MEMBERDETAIL="member-detail",
 }

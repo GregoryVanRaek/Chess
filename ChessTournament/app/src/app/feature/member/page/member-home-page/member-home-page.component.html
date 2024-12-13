@@ -1,0 +1,32 @@
+<body>
+<div class="container">
+  <h1>User Profile</h1>
+    <div class="user-info">
+      <div>
+        <span class="label">Username:</span>
+        <span class="value">{{ member$()?.username }}</span>
+      </div>
+      <div>
+        <span class="label">Email:</span>
+        <span class="value">{{ member$()?.mail }}</span>
+      </div>
+      <div>
+        <span class="label">Birthday:</span>
+        <span class="value">{{ member$()?.birthday }}</span>
+      </div>
+      <div>
+        <span class="label">Gender:</span>
+        <span class="value">{{ member$()?.gender }}</span>
+      </div>
+      <div>
+        <span class="label">Elo:</span>
+        <span class="value">{{ member$()?.elo }}</span>
+      </div>
+    </div>
+    <div class="btn-container flex gap-4">
+      <a class="btn" routerlink="">Edit Profile</a>
+      <button class="btn btn-danger" routerLink="/tournament/dashboard">Back to Dashboard</button>
+    </div>
+
+</div>
+</body>

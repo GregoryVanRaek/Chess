@@ -1,15 +1,24 @@
 import { Routes} from '@angular/router';
 import {AppNode} from '@common';
-import {RegisterPageComponent} from './page/register-page/register-page.component';
+import {TournamentRouterComponent} from './router';
 
 export const tournamentRoutes :Routes = [
   {
-    path: '',
-    redirectTo:AppNode.REGISTER,
-    pathMatch:'full'
-  },
-  {
-    path:AppNode.REGISTER,
-    loadComponent: () => import('./page').then(r => r.RegisterPageComponent)
+    path: "",
+    component: TournamentRouterComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: AppNode.DASHBOARD,
+        pathMatch: 'full'
+      },
+      {
+        path: AppNode.DASHBOARD,
+        loadComponent: () => import('./page').then(r => r.DashboardComponent)
+      },
+      {
+        path: AppNode.REGISTER,
+        loadComponent: () => import('./page').then(r => r.RegisterPageComponent)
+      }]
   }
 ]

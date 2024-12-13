@@ -20,11 +20,11 @@ public class AuthService
         // création d'un objet de sécurité avec les informations à stocker dans le token (pas d'informations sensibles)
         List<Claim> claims = new List<Claim>()
         {
-            new Claim(ClaimTypes.NameIdentifier, member.Id.ToString()),
+            new Claim("Id", member.Id.ToString()),
             new Claim("Username", member.Username),
             new Claim("Elo", member.Elo.ToString()),
-            new Claim(ClaimTypes.Email, member.Mail),
-            new Claim(ClaimTypes.Role, member.Role.ToString()),
+            new Claim("Email", member.Mail),
+            new Claim("Role", member.Role.ToString()),
         };
         
         // clé de cryptage

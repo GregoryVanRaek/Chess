@@ -68,7 +68,7 @@ public class MembersController : ControllerBase
             if (member is null)
                 return NotFound("This member doesn't exist");
 
-            return Ok(member.ToDTO());
+            return Ok(member.ToListDTO());
         }
         catch (DBException e)
         {

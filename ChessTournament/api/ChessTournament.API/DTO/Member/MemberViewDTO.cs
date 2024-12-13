@@ -5,6 +5,7 @@ namespace ChessTournament.API.DTO.Member;
 
 public class MemberViewDTO
 {
+    public int? Id { get; set; }
     public required string Username { get; set; }
     public required string Mail { get; set; }
     public required DateTime Birthday { get; set; }

@@ -31,4 +31,10 @@ export class TokenService {
       localStorage.removeItem(environment.TOKEN_KEY);
   }
 
+  decodeJwt(token: string): any {
+    const payloadBase64 = token.split('.')[1];
+    const payloadDecoded = atob(payloadBase64.replace(/-/g, '+').replace(/_/g, '/'));
+    return JSON.parse(payloadDecoded);
+  }
+
 }

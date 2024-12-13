@@ -5,7 +5,7 @@ import {securityGuard} from '../feature/security/guard';
 export const routes: Routes = [
   {
     path : "",
-    redirectTo:AppNode.HOME,
+    redirectTo:AppNode.TOURNAMENT,
     pathMatch:"full"
   },
   {
@@ -14,11 +14,16 @@ export const routes: Routes = [
   },
   {
     path:AppNode.TOURNAMENT,
-    canActivate:[securityGuard],
+    //canActivate:[securityGuard],
     loadChildren: () => import('../feature/tournament').then(r => r.tournamentRoutes)
   },
   {
     path:AppNode.SECURITY,
     loadChildren: () => import('../feature/security').then(r => r.securityRoutes)
+  },
+  {
+    path:AppNode.MEMBER,
+    //canActivate:[securityGuard],
+    loadChildren: () => import('../feature/member').then(r => r.memberRoutes)
   }
 ];

@@ -1,0 +1,24 @@
+<main class="flex h-screen">
+  <nav>
+    <div class="flex gap-4 items-center">
+      <h1 class="text-center">Dashboard</h1>
+    </div>
+    <a routerLink="/dashboard" class="nav-link">Home</a>
+    <a routerLink="../member/member-detail" class="nav-link">Profil</a>
+    <a routerLink="/home" class="nav-link" (click)="logout()">Logout</a>
+  </nav>
+
+  <div class="flex flex-col w-5/6">
+    <header class="p-4">
+      <div class="flex flex-row justify-between items-center">
+        <h2>Profil</h2>
+      </div>
+    </header>
+
+    <span class="page-wrapper-primary"></span>
+
+    <section class="content flex-grow p-4">
+      <router-outlet></router-outlet>
+    </section>
+  </div>
+</main>

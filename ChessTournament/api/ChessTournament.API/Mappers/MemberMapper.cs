@@ -9,7 +9,8 @@ public static class MemberMapper
     public static MemberViewDTO ToListDTO(this Member member)
     {
         return new MemberViewDTO()
-        {
+        {   
+            Id = member.Id,
             Username = member.Username,
             Mail = member.Mail,
             Birthday = member.Birthday,

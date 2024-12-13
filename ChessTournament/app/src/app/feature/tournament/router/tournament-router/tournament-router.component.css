@@ -1,0 +1,19 @@
+header{
+  color:var(--text-secondary-color);
+}
+
+nav{
+  @apply flex flex-col h-full w-1/6 p-4;
+  background-color: var(--primary-color);
+  color: var(--text-primary-color);
+}
+
+.nav-link{
+  @apply py-2 px-4 rounded;
+
+  &:hover{
+    background-color: var(--secondary-color);
+    color: var(--text-secondary-color);
+  }
+}
+

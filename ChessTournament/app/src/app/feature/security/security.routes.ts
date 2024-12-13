@@ -2,8 +2,6 @@ import { Routes } from '@angular/router';
 import {AppNode} from '@common';
 import {SecurityRouterComponent} from './router';
 
-
-
 export const securityRoutes: Routes = [
   {
     path : "",
