@@ -1,13 +1,44 @@
 <h2>Latest tournaments</h2>
 
-<ul>
-  <span>Tournament 1</span>
-  <li>test</li>
-  <li>test</li>
-  <li>test</li>
-  <li>test</li>
-  <a class="btn" routerLink="./detail">more info</a>
-</ul>
+<div class="tournament-container">
+  <h1 class="title">Tournament Details</h1>
+
+    @if(tournament$().length > 0) {
+      @for(tournament of tournament$() ; track $index) {
+        <div class="tournament-card">
+          <div class="tournament-header">
+            <h2 class="tournament-name">{{ tournament.name }}</h2>
+            <span class="tournament-status">
+              {{ tournament.womenOnly ? 'Women Only' : 'Open to All' }}
+            </span>
+          </div>
+          <div class="tournament-details">
+            <p><strong>Place:</strong> {{ tournament.place }}</p>
+            <p><strong>Players:</strong>
+              {{ tournament.registeredPlayers }} /
+              {{ tournament.playerMax }}
+            </p>
+            <p><strong>ELO Range:</strong>
+              {{ tournament.eloMin }} - {{ tournament.eloMax }}
+            </p>
+            <p><strong>Current Round:</strong> {{ tournament.actualRound }}</p>
+            <p><strong>State:</strong> {{ tournament.state }}</p>
+            <p><strong>Registration Ends:</strong>
+              {{ tournament.registrationEndDate }}
+            </p>
+          </div>
+          <div class="tournament-actions flex gap-4 justify-center">
+            <a class="btn cursor-pointer" [routerLink]="['/tournaments', AppNode.OPENTOURNAMENTDETAIL, tournament.id]">Details</a>
+            <button class="btn btn-success">Join Tournament</button>
+            <button class="btn btn-disabled">Registration Closed</button>
+          </div>
+        </div>
+        <div class="my-8"></div>
+      }
+  } @else {
+    <p>Loading tournament data...</p>
+  }
+</div>
 
 <div>
   <a class="btn" routerLink="/home">Back to menu</a>

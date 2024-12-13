@@ -1,0 +1,53 @@
+.tournament-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.title {
+  font-size: 2rem;
+  text-align: center;
+  color: var(--primary-color);
+  margin-bottom: 20px;
+}
+
+.tournament-card {
+  background-color: var(--background-color-heavy);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tournament-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.tournament-name {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+}
+
+.tournament-status {
+  font-size: 0.875rem;
+  padding: 5px 10px;
+  border-radius: 4px;
+  background-color: var(--secondary-color);
+  color: var(--text-secondary-color);
+}
+
+.tournament-status.women-only {
+  background-color: var(--cancel-color);
+  color: var(--text-primary-color);
+}
+
+.tournament-details {
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.tournament-actions {
+  margin-top: 20px;
+}

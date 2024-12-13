@@ -8,7 +8,6 @@ import {Observable} from 'rxjs';
 export class MemberService {
 
   constructor(private tokenService :TokenService, private apiService :ApiService) {
-
   }
 
   getUserIdFromToken(): Observable<Member> | null {

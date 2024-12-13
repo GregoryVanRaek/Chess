@@ -1,7 +1,6 @@
 import { Routes} from '@angular/router';
 import {HomeRouterComponent} from './router/home-router/home-router.component';
 import {AppNode} from '../../common';
-import {OpenTournamentComponent, TournamentDetailComponent} from './page';
 
 export const homeRoutes :Routes = [
   {
@@ -17,7 +16,7 @@ export const homeRoutes :Routes = [
         loadComponent:() => import('./page').then(c => c.OpenTournamentComponent),
       },
       {
-        path:`${AppNode.OPENTOURNAMENT}/${AppNode.OPENTOURNAMENTDETAIL}`,
+        path:`${AppNode.OPENTOURNAMENTDETAIL}/:id`,
         loadComponent: () => import('./page').then(c => c.TournamentDetailComponent)
       },
       {

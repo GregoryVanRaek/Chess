@@ -1,0 +1,41 @@
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.tournament-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.tournament-info {
+  background-color: var(--background-color-heavy);
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.detail {
+  margin-bottom: 10px;
+}
+
+.label {
+  font-weight: bold;
+}
+
+.value {
+  margin-left: 10px;
+}
+
+.categories, .members, .games {
+  margin-top: 20px;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+.btn-container {
+  margin-top: 20px;
+}
