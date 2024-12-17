@@ -12,4 +12,10 @@ export enum AppNode{
   DASHBOARD='dashboard',
   MEMBER="member",
   MEMBERDETAIL="member-detail",
+  ADMIN="admin",
+  NEWTOURNAMENT="newtournament",
+  MANAGETOURNAMENT="managetournament",
+  NEXTROUND="nextround",
+  UPDATEMATCH="updatematch",
+  INFORMATION="information",
 }

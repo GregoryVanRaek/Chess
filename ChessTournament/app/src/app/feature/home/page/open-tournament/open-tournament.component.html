@@ -28,7 +28,7 @@
             </p>
           </div>
           <div class="tournament-actions flex gap-4 justify-center">
-            <a class="btn cursor-pointer" [routerLink]="['/tournaments', AppNode.OPENTOURNAMENTDETAIL, tournament.id]">Details</a>
+            <a class="btn cursor-pointer" [routerLink]="[AppNode.OPENTOURNAMENTDETAIL, tournament.id]">Details</a>
             <button class="btn btn-success">Join Tournament</button>
             <button class="btn btn-disabled">Registration Closed</button>
           </div>
@@ -40,6 +40,6 @@
   }
 </div>
 
-<div>
+<div class="mb-4">
   <a class="btn" routerLink="/home">Back to menu</a>
 </div>

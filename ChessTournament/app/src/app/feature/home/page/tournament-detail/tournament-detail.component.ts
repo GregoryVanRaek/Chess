@@ -2,12 +2,14 @@ import {Component, signal, WritableSignal} from '@angular/core';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {HomeService} from '../../service';
 import {Tournament} from '@shared/api';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-tournament-detail',
   standalone: true,
   imports: [
-    RouterLink
+    RouterLink,
+    DatePipe
   ],
   templateUrl: './tournament-detail.component.html',
   styleUrl: './tournament-detail.component.css'
@@ -17,8 +19,8 @@ export class TournamentDetailComponent {
   tournamentId :number;
 
   constructor(private homeservice :HomeService, private route: ActivatedRoute) {
-    this.fetchTournament();
     this.tournamentId = Number(this.route.snapshot.paramMap.get('id'));
+    this.fetchTournament();
   }
 
   fetchTournament() : void{

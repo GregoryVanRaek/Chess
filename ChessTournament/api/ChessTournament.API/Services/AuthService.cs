@@ -25,6 +25,7 @@ public class AuthService
             new Claim("Elo", member.Elo.ToString()),
             new Claim("Email", member.Mail),
             new Claim("Role", member.Role.ToString()),
+            new Claim(ClaimTypes.Role, member.Role.ToString()),
         };
         
         // clé de cryptage

@@ -1,0 +1,37 @@
+<div class="tournaments-list">
+  <div class="flex gap-4 justify-center items-center text-center">
+    <h1>Tournaments Management</h1>
+    <a class="btn " routerLink="/admin/newtournament">+</a>
+  </div>
+
+  <table>
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Place</th>
+      <th>Participants</th>
+      <th>Min Players</th>
+      <th>Max Players</th>
+      <th>Registration Ends</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+
+    @for(tournament of tournament$() ; track $index){
+      <tbody>
+      <td>{{ tournament.name }}</td>
+      <td>{{ tournament.place }}</td>
+      <td>{{ tournament.registeredPlayers }}</td>
+      <td>{{ tournament.playerMin }}</td>
+      <td>{{ tournament.playerMax }}</td>
+      <td>{{ tournament.registrationEndDate | date:'longDate' }}</td>
+      <td>{{ tournament.state }}</td>
+      <td class="flex gap-2"><button class="btn" (click)="startTournament(tournament.id)">Start</button>
+        <button class="btn btn-success" (click)="addPlayer()">Add </button>
+        <button class="btn btn-danger" (click)="deleteTournament(tournament.id)">Delete</button>
+      </td>
+    </tbody>
+    }
+  </table>
+</div>

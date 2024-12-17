@@ -117,7 +117,7 @@ public class TournamentsController : ControllerBase
         }
     }
     
-    [HttpPost("newTournament")]
+    [HttpPost("newtournament")]
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -137,7 +137,7 @@ public class TournamentsController : ControllerBase
            || tournamentDto.EloMax <  TournamentConst.MIN_ELO || tournamentDto.EloMax > TournamentConst.MAX_ELO )
             return BadRequest($"Min and max Elo must be between {TournamentConst.MIN_ELO } and {TournamentConst.MAX_ELO }");
 
-        if (!User.IsInRole(Role.Admin.ToString()))
+        if (!User.IsInRole("Admin"))
             return Forbid("You can't do that");
         
         try

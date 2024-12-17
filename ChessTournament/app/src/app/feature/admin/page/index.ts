@@ -1,0 +1,6 @@
+export * from './tournament-admin-page/tournament-admin-page.component'
+export * from './new-tournament-page/new-tournament-page.component'
+export * from './start-tournament-page/start-tournament-page.component'
+export * from './next-round-page/next-round-page.component'
+export * from './update-match-page/update-match-page.component'
+export * from './information-page/information-page.component'

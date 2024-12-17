@@ -1,88 +1,87 @@
-<!--<div class="container">-->
-<!--  <h1 class="tournament-title">Détails du tournoi</h1>-->
+<div class="container">
+  <h1 class="tournament-title">Détails du tournoi</h1>
 
-<!--  @if(tournament$()) {-->
-<!--    <div class="tournament-info">-->
-<!--      <div class="detail">-->
-<!--        <span class="label">Nom du tournoi:</span>-->
-<!--        <span class="value">{{ tournament$().name }}</span>-->
-<!--      </div>-->
-<!--      <div class="detail">-->
-<!--        <span class="label">Lieu:</span>-->
-<!--        <span class="value">{{ tournament$().place }}</span>-->
-<!--      </div>-->
-<!--      <div class="detail">-->
-<!--        <span class="label">État:</span>-->
-<!--        <span class="value">{{ tournament$().state }}</span>-->
-<!--      </div>-->
-<!--      <div class="detail">-->
-<!--        <span class="label">Nombre de joueurs inscrits:</span>-->
-<!--        <span class="value">{{ tournament$().registeredPlayers }}</span>-->
-<!--      </div>-->
-<!--      <div class="detail">-->
-<!--        <span class="label">Elo minimum:</span>-->
-<!--        <span class="value">{{ tournament$().eloMin }}</span>-->
-<!--      </div>-->
-<!--      <div class="detail">-->
-<!--        <span class="label">Elo maximum:</span>-->
-<!--        <span class="value">{{ tournament$().eloMax }}</span>-->
-<!--      </div>-->
-<!--      <div class="detail">-->
-<!--        <span class="label">Date de fin d'inscription:</span>-->
-<!--        <span class="value">{{ tournament$().registrationEndDate | date: 'short' }}</span>-->
-<!--      </div>-->
-<!--      <div class="detail">-->
-<!--        <span class="label">Date de création:</span>-->
-<!--        <span class="value">{{ tournament$().creationDate | date: 'short' }}</span>-->
-<!--      </div>-->
-<!--      <div class="detail">-->
-<!--        <span class="label">Date de mise à jour:</span>-->
-<!--        <span class="value">{{ tournament$().updateDate }}</span>-->
-<!--      </div>-->
-<!--    </div>-->
+  @if(tournament$()) {
+    <div class="tournament-info">
+      <div class="detail">
+        <span class="label">Nom du tournoi:</span>
+        <span class="value">{{ tournament$()?.name }}</span>
+      </div>
+      <div class="detail">
+        <span class="label">Lieu:</span>
+        <span class="value">{{ tournament$()?.place }}</span>
+      </div>
+      <div class="detail">
+        <span class="label">État:</span>
+        <span class="value">{{ tournament$()?.state }}</span>
+      </div>
+      <div class="detail">
+        <span class="label">Nombre de joueurs inscrits:</span>
+        <span class="value">{{ tournament$()?.registeredPlayers }}</span>
+      </div>
+      <div class="detail">
+        <span class="label">Elo minimum:</span>
+        <span class="value">{{ tournament$()?.eloMin }}</span>
+      </div>
+      <div class="detail">
+        <span class="label">Elo maximum:</span>
+        <span class="value">{{ tournament$()?.eloMax }}</span>
+      </div>
+      <div class="detail">
+        <span class="label">Date de fin d'inscription:</span>
+        <span class="value">{{ tournament$()?.registrationEndDate | date :'longDate' }}</span>
+      </div>
+      <div class="detail">
+        <span class="label">Date de création:</span>
+        <span class="value">{{ tournament$()?.creationDate | date :'longDate'}}</span>
+      </div>
+      <div class="detail">
+        <span class="label">Date de mise à jour:</span>
+        <span class="value">{{ tournament$()?.updateDate | date :'longDate'}}</span>
+      </div>
+    </div>
 
 
-<!--    @if(tournament$().categories && tournament$().categories.length > 0) {-->
-<!--      <div class="categories">-->
-<!--        <h3>Catégories</h3>-->
-<!--        <ul>-->
-<!--          @for(category of tournament$().categories ; track $index) {-->
-<!--            <li>{{ category }}</li>-->
-<!--          }-->
-<!--        </ul>-->
-<!--      </div>-->
-<!--    }-->
+    @if(tournament$()?.categories && tournament$()?.categories.length > 0) {
+      <div class="categories">
+        <h3>Catégories</h3>
+        <ul>
+          @for(category of tournament$()?.categories ; track $index) {
+            <li>{{ category.name }}</li>
+          }
+        </ul>
+      </div>
+    }
 
-<!--    @if(tournament$().members && tournament$().members.length > 0) {-->
-<!--      <div class="members">-->
-<!--        <h3>Membres Inscrits</h3>-->
-<!--        <ul>-->
-<!--          @for(member of tournament$().members) {-->
-<!--            <li>{{ member.username }} ({{ member.elo }})</li>-->
-<!--          }-->
-<!--        </ul>-->
-<!--      </div>-->
-<!--    }-->
+    @if(tournament$()?.members && tournament$()?.members.length > 0) {
+      <div class="members">
+        <h3>Membres Inscrits</h3>
+        <ul>
+          @for(member of tournament$()?.members ; track $index) {
+            <li>{{ member.username }} ({{ member.elo }})</li>
+          }
+        </ul>
+      </div>
+    }
 
-<!--    @if(tournament$().games && tournament$().games.length > 0) {-->
-<!--      <div class="games">-->
-<!--        <h3>Jeux</h3>-->
-<!--        <ul>-->
-<!--          @for(game of tournament$().games) {-->
-<!--            <li>Jeu ID: {{ game.id }} - Round: {{ game.round }}</li>-->
-<!--          }-->
-<!--        </ul>-->
-<!--      </div>-->
-<!--    }-->
+    @if(tournament$()?.games && tournament$()?.games.length > 0) {
+      <div class="games">
+        <h3>Jeux</h3>
+        <ul>
+          @for(game of tournament$()?.games ; track $index) {
+            <li>Jeu ID: {{ game.id }} - Round: {{ game.round }}</li>
+          }
+        </ul>
+      </div>
+    }
+  }
 
-<!--    <div class="btn-container">-->
-<!--      <button class="btn btn-danger" routerLink="/tournaments">Retour à la liste des tournois</button>-->
-<!--    </div>-->
-<!--  }-->
+  @else {
+    <p>Chargement des détails du tournoi...</p>
+  }
+</div>
 
-<!--  @else {-->
-<!--    <p>Chargement des détails du tournoi...</p>-->
-<!--  }-->
-<!--</div>-->
 
-<p>coucou</p>
+<div class="btn-container">
+  <a class="btn btn-danger" routerLink="/home/open-tournament">Retour à la liste des tournois</a>
+</div>

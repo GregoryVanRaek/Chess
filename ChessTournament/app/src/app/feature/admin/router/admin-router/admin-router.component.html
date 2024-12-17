@@ -1,0 +1,13 @@
+<header class="flex gap-4 justify-center text-center">
+  <h1>Admin Dashboard - Chess Tournament</h1>
+  <a class="btn btn-invert cursor-pointer" routerLink="/tournament/dashboard">Member interface</a>
+</header>
+<nav>
+  <ul>
+    <li><a routerLink="./newtournament" class="active">Create Tournament</a></li>
+    <li><a routerLink="./managetournament">Manage tournament</a></li>
+    <li><a routerLink="./updatematch">Manage tournament's match</a></li>
+    <li><a routerLink="./nextround">Manage round</a></li>
+  </ul>
+</nav>
+  <router-outlet></router-outlet>

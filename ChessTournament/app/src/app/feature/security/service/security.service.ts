@@ -4,7 +4,6 @@ import {Observable, tap} from 'rxjs';
 import {AppNode} from '@common';
 import {Router} from '@angular/router';
 import {environment} from '@environment';
-import {isNil} from 'lodash';
 
 
 @Injectable({

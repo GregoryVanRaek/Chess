@@ -1,0 +1,63 @@
+<div class="container w-full m-auto">
+  <h1>Create New Tournament</h1>
+  <form [formGroup]="formGroup">
+    <div class="form-group">
+      <label for="name">Tournament Name:</label>
+      <input formControlName="name" type="text" id="name" name="name" placeholder="Enter tournament name"/>
+    </div>
+
+    <div class="form-group">
+      <label for="place">Place:</label>
+      <input formControlName="place" type="text" id="place" name="place" placeholder="Enter tournament location"/>
+    </div>
+
+    <div class="form-group">
+      <label for="playerMin">Minimum player:</label>
+      <input formControlName="playerMin" type="number" id="playerMin" name="playerMin" placeholder="Enter minimum player"/>
+    </div>
+
+    <div class="form-group">
+      <label for="playerMax">Maximum player:</label>
+      <input formControlName="playerMax" type="number" id="playerMax" name="playerMax" placeholder="Enter maximum player"/>
+    </div>
+
+    <div class="form-group">
+      <label for="eloMin">Minimum elo:</label>
+      <input formControlName="eloMin" type="number" id="eloMin" name="eloMin" placeholder="Enter minimum elo"/>
+    </div>
+
+    <div class="form-group">
+      <label for="eloMax">Maximum elo:</label>
+      <input formControlName="eloMax" type="number" id="eloMax" name="eloMax" placeholder="Enter maximum elo"/>
+    </div>
+
+    <div class="form-group">
+      <label for="womenOnly">Women only:</label>
+      <input formControlName="womenOnly" type="checkbox" id="womenOnly" name="womenOnly"/>
+    </div>
+
+    <div class="form-group">
+      <label for="registrationEndDate">Registration End Date:</label>
+      <input formControlName="registrationEndDate" type="date" id="registrationEndDate" name="womenOnly"/>
+    </div>
+
+    <div class="form-group">
+      <div class="flex flex-col">
+        <label for="categories">Categories</label>
+        <select name="categories" id="categories" multiple formControlName="categories">
+        @for(category of categories ; track $index){
+          <option [value]="category">{{ category.name }}</option>
+        }
+        </select>
+      </div>
+    </div>
+
+    <div class="flex gap-4 justify-center my-4">
+      <button class="btn btn-success cursor-pointer"
+              (click)="create()"
+              type="button">
+        Create Tournament
+      </button>
+    </div>
+  </form>
+</div>

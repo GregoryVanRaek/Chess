@@ -16,7 +16,7 @@ export const homeRoutes :Routes = [
         loadComponent:() => import('./page').then(c => c.OpenTournamentComponent),
       },
       {
-        path:`${AppNode.OPENTOURNAMENTDETAIL}/:id`,
+        path:`${AppNode.OPENTOURNAMENT}/${AppNode.OPENTOURNAMENTDETAIL}/:id`,
         loadComponent: () => import('./page').then(c => c.TournamentDetailComponent)
       },
       {

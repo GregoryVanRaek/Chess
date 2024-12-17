@@ -1,10 +1,11 @@
 import {GenderEnum} from '@shared/api/enum';
 
 export interface Member{
-  id: number;
-  username:string;
-  mail:string;
-  birthday: Date;
-  gender :GenderEnum;
-  elo :number;
+  Id: number;
+  Username:string;
+  Mail:string;
+  Birthday: Date;
+  Gender :GenderEnum;
+  Elo :number;
+  Role :string;
 }

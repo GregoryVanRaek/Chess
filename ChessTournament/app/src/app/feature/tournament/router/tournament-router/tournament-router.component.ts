@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, signal, WritableSignal} from '@angular/core';
 import {RouterLink, RouterOutlet} from '@angular/router';
-import {TokenService} from '@shared/api';
+import {Member, TokenService} from '@shared/api';
 
 @Component({
   selector: 'app-tournament-router',
@@ -13,11 +13,24 @@ import {TokenService} from '@shared/api';
   styleUrl: './tournament-router.component.css'
 })
 export class TournamentRouterComponent {
+  user$ :WritableSignal<Member | null> = signal(null);
+
   constructor(private tokenService :TokenService) {
+    this.loadMember();
   }
 
   logout():void{
     return this.tokenService.setToken("");
+  }
+
+  loadMember():any{
+    const token = this.tokenService.token$();
+
+    if (token) {
+      this.user$.set(this.tokenService.decodeJwt(token));
+    } else {
+      console.error('Token is null or undefined');
+    }
   }
 
 }

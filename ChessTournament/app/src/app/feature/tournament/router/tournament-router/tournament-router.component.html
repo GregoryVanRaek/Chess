@@ -11,7 +11,11 @@
   <div class="flex flex-col w-5/6">
     <header class="p-4">
       <div class="flex flex-row justify-between items-center">
-        <h2>Profil</h2>
+        <h2>Welcome {{ user$()?.Username }}</h2>
+        @if(user$()?.Role == 'Admin')
+        {
+          <a class="btn cursor-pointer" routerLink="/admin">Admin interface</a>
+        }
       </div>
     </header>
 

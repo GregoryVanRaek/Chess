@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import {AppNode} from '@common';
 import {securityGuard} from '../feature/security/guard';
+import {adminGuard} from '../feature/admin/guard/admin.guard';
 
 export const routes: Routes = [
   {
@@ -25,5 +26,10 @@ export const routes: Routes = [
     path:AppNode.MEMBER,
     //canActivate:[securityGuard],
     loadChildren: () => import('../feature/member').then(r => r.memberRoutes)
+  },
+  {
+    path:AppNode.ADMIN,
+    canActivate:[adminGuard],
+    loadChildren:() => import('../feature/admin').then(r => r.adminRoutes)
   }
 ];
