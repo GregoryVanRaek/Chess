@@ -5,7 +5,7 @@ using MimeKit.Text;
 
 namespace ChessTournament.API.Services;
 
-public class MailService
+public class MailService // normalement ce srvice peut également aller dans l'infrastructure
 {
     private readonly string _noReplyName;
     private readonly string _noReplyEmail;

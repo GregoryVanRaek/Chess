@@ -121,8 +121,8 @@ public class TournamentsController : ControllerBase
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)] // si pas connecté
+    [ProducesResponseType(StatusCodes.Status403Forbidden)] // si pas le bon role
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<TournamentViewDTO>> Create([FromBody] TournamentFormDTO tournamentDto)
     {

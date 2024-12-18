@@ -31,11 +31,11 @@ public class MemberRepository : IMemberRepository
 
     public async Task<Member?> GetOneByEmailOrUsernameAsync(string credential)
     {
-        return await _context.Members.Include(m => m.Tournaments)
-                                     .Include(m => m.GameMembers)                         
-                                     .FirstOrDefaultAsync(m => m.Username == credential || m.Mail == credential);
+        return await _context.Members.FirstOrDefaultAsync(m => m.Username == credential || m.Mail == credential);
     }
 
+    // possible d'utiliser EF.Functions.Like pour utiliser le LIKE de SQL
+    
     public async Task<Member> CreateAsync(Member entity)
     {
         var insert = _context.Members.Add(entity).Entity;
@@ -46,7 +46,7 @@ public class MemberRepository : IMemberRepository
     public async Task<Member> UpdateAsync(Member entity)
     {
         Member? entityToUpdate = await _context.Members.FirstOrDefaultAsync(d => d.Id == entity.Id);
-
+        
         if (entityToUpdate == null)
             throw new NotFoundexception("Member not found");
 

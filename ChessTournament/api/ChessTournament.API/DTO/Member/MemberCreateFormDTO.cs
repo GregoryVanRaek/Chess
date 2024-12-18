@@ -5,10 +5,10 @@ namespace ChessTournament.API.DTO.Member;
 
 public class MemberCreateFormDTO
 {
+    [Required] // plus besoin de cette annotation, 
+    public string Username { get; set; } // string = requis, string? = non requis
     [Required]
-    public string Username { get; set; }
-    [Required]
-    [EmailAddress]
+    [EmailAddress] // possibilité de créer ses propres annotation en héritant de validationattribute et override la méthode isvalid
     public string Mail { get; set; }
     [Required]
     [RegularExpression("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")]

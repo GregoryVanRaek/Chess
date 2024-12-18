@@ -24,4 +24,8 @@
       <ProjectReference Include="..\ChessTournament.Domain\ChessTournament.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Mail\" />
+    </ItemGroup>
+
 </Project>

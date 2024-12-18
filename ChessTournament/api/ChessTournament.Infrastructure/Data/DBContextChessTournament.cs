@@ -2,7 +2,7 @@
 using ChessTournament.Infrastructure.Data.Configuration;
 using Microsoft.EntityFrameworkCore;
 
-namespace ChessTournament.Infrastructure.Data;
+namespace ChessTournament.Infrastructure.Data; // la couche reprends tout ce qui va vers l'extérieur (connection serveur mail, api externe, ...)
 
 public class DbContextChessTournament : DbContext
 {

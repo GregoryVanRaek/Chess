@@ -3,7 +3,10 @@ using ChessTournament.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ChessTournament.Infrastructure.Data.Configuration;
+namespace ChessTournament.Infrastructure.Data.Configuration; 
+
+/* on est pas obligé de faire cette configuration, on pourrait se contenter
+ d'utiliser les data annotations dans les classes d'entités*/
 
 public class MemberConfig : IEntityTypeConfiguration<Member>
 {

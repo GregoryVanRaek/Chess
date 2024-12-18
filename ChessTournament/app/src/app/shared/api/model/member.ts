@@ -4,7 +4,7 @@ export interface Member{
   Id: number;
   Username:string;
   Mail:string;
-  Birthday: Date;
+  Birthday: string;
   Gender :GenderEnum;
   Elo :number;
   Role :string;

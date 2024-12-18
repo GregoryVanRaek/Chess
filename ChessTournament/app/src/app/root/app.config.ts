@@ -11,4 +11,11 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([httpInterceptor]))
   ]
+  /* ajouter provider pour primeNG
+  provideAnimationsAsync(),
+  providePrimeNG({
+                   theme: {
+                     preset: Aura
+                   }
+                 })*/
 };

@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json.Serialization;
+using ChessTournament.API.DependencyInjection;
 using ChessTournament.API.Services;
 using ChessTournament.Applications.Interfaces.Repository;
 using ChessTournament.Applications.Interfaces.Service;
@@ -55,10 +56,15 @@ builder.Services.AddDbContext<DbContextChessTournament>(
     b => b.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
+builder.Services.AddRepositories();
+builder.Services.AddBusinessServices();
+
+/* refactorisation des injections via une classe d'extension (service extension)
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IMemberService, MemberService>();
 builder.Services.AddScoped<ITournamentRepository, TournamentRepository>();
 builder.Services.AddScoped<ITournamentService, TournamentService>();
+*/
 
 builder.Services.AddScoped<MailService>();
 builder.Services.AddScoped<AuthService>();

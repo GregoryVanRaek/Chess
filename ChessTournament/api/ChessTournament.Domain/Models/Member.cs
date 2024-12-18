@@ -7,7 +7,7 @@ public class Member
     public int? Id { get; set; }
     public required string Username { get; set; }
     public required string Mail { get; set; }
-    public required string Password { get; set; }
+    public required string Password { get; set; } // possible de faire un tableau de byte aussi à la place d'un string
     public required DateTime Birthday { get; set; }
     public required Gender Gender { get; set; }
     public int? Elo { get; set; }
